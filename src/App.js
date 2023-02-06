@@ -35,7 +35,7 @@ function App() {
     <>
       <nav class="navbar sticky-top bg-body-tertiary">
         <div class="container-md my-2">
-          <a class="navbar-brand">Movie Rater</a>
+          <a class="navbar-brand h1">Movie Rater</a>
           <form class="d-flex" role="search">
             <input
               class="form-control me-2"
@@ -52,28 +52,32 @@ function App() {
 
       <div>
         <div class="container container-md">
-          {user &&
-            user.length > 0 &&
-            user.map((userObj, index) => (
-              <div class="card my-4" key={userObj.original_title}>
-                <div class="row">
-                  <div class="col-2">
-                    <img
-                      src={img_URL + userObj.poster_path}
-                      class="card-img-top"
-                      alt="..."
-                    />
-                  </div>
-                  <div class="card-body col-10">
-                    <div class="d-flex justify-content-between">
-                      <h5 class="card-title">{userObj.original_title}</h5>
-                      <p class="card-text me-5">{userObj.release_date}</p>
+          <div class="row row-cols-2">
+            {user &&
+              user.length > 0 &&
+              user.map((userObj, index) => (
+                <div class="col">
+                  <div class="card my-4" key={userObj.original_title}>
+                    <div class="row ">
+                      <div class="col-4">
+                        <img
+                          src={img_URL + userObj.poster_path}
+                          class="card-img-top"
+                          alt="..."
+                        />
+                      </div>
+                      <div class="card-body col-8">
+                        <div class="d-flex justify-content-between">
+                          <h5 class="card-title">{userObj.original_title}</h5>
+                          <p class="card-text me-5">{userObj.release_date}</p>
+                        </div>
+                        <p class="card-text">{userObj.overview}</p>
+                      </div>
                     </div>
-                    <p class="card-text">{userObj.overview}</p>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+          </div>
         </div>
       </div>
     </>
