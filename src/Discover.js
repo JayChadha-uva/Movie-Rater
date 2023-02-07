@@ -1,45 +1,18 @@
 /* eslint-disable react/style-prop-object */
 import "./App.css";
 
-import Discover from "./Discover";
-import SelectSearch from "react-select-search";
-
 import React, { useEffect, useState } from "react";
 
-function App() {
+function Discover() {
   const [user, setUser] = useState([]);
   const [message, setMessage] = useState("");
 
   const img_URL = "https://image.tmdb.org/t/p/original";
   const API_KEY = "3d0ac201ad49d76eb1e30e54903dcc54";
 
-  function getOptions(query) {
-    return new Promise((resolve, reject) => {
-      fetch(
-        "https://api.themoviedb.org/3/search/movie?api_key=" +
-          API_KEY +
-          "&query=" +
-          String(message).replace(/ /g, "+")
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          resolve(
-            data.results.map((obj) => ({
-              value: obj.original_title,
-              name: obj.original_title,
-            }))
-          );
-        })
-        .catch(reject);
-    });
-  }
-
   const fetchData = () => {
     return fetch(
-      "https://api.themoviedb.org/3/search/movie?api_key=" +
-        API_KEY +
-        "&query=" +
-        String(message).replace(/ /g, "+")
+      "https://api.themoviedb.org/3/trending/movie/week?api_key=" + API_KEY
     )
       .then((response) => response.json())
       .then((data) => setUser(data.results));
@@ -73,32 +46,6 @@ function App() {
           </form>
         </div>
       </nav>
-
-      <SelectSearch
-        options={[]}
-        defaultValue="None"
-        getOptions={(query) => {
-          return new Promise((resolve, reject) => {
-            fetch(
-              `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${String(
-                query
-              ).replace(/ /g, "+")}`
-            )
-              .then((response) => response.json())
-              .then((drinks) => {
-                resolve(
-                  drinks.results.map(({ original_title }) => ({
-                    value: original_title,
-                    name: original_title,
-                  }))
-                );
-              })
-              .catch(reject);
-          });
-        }}
-        search
-        placeholder="Search Movies"
-      />
 
       <div>
         <div class="container container-md">
@@ -134,4 +81,4 @@ function App() {
   );
 }
 
-export default App;
+export default Discover;
