@@ -1,11 +1,11 @@
 /* eslint-disable react/style-prop-object */
+import { Link } from "react-router-dom";
 import "./App.css";
 
 import React, { useEffect, useState } from "react";
 
 function Discover() {
   const [user, setUser] = useState([]);
-  const [message, setMessage] = useState("");
 
   const img_URL = "https://image.tmdb.org/t/p/original";
   const API_KEY = "3d0ac201ad49d76eb1e30e54903dcc54";
@@ -22,33 +22,11 @@ function Discover() {
     fetchData();
   }, []);
 
-  const handleChange = (event) => {
-    setMessage(event.target.value);
-    setUser([]);
-    fetchData();
-  };
-
   return (
     <>
-      <nav class="navbar sticky-top bg-body-tertiary">
-        <div class="container-md my-2">
-          <a class="navbar-brand h1">Movie Rater</a>
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="text"
-              id="message"
-              name="message"
-              placeholder="Search"
-              onChange={handleChange}
-              value={message}
-            />
-          </form>
-        </div>
-      </nav>
-
       <div>
         <div class="container container-md">
+          <h1 class="my-4">Discover New Movies</h1>
           <div class="row row-cols-2">
             {user &&
               user.length > 0 &&
@@ -65,7 +43,9 @@ function Discover() {
                       </div>
                       <div class="card-body col-8">
                         <div class="d-flex justify-content-between">
-                          <h5 class="card-title">{userObj.original_title}</h5>
+                          <Link to={`/movie/${userObj.id}`}>
+                            <h5 class="card-title">{userObj.original_title}</h5>
+                          </Link>
                           <p class="card-text me-5">{userObj.release_date}</p>
                         </div>
                         <p class="card-text">{userObj.overview}</p>
