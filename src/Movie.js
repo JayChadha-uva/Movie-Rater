@@ -11,6 +11,7 @@ function Movie() {
   const { id } = useParams();
   const [movie, setMovie] = useState([]);
   const [similarMovies, setSimilarMovies] = useState([]);
+  const [watchProviders, setWatchProviders] = useState([]);
 
   const API_KEY = "3d0ac201ad49d76eb1e30e54903dcc54";
   const img_URL = "https://image.tmdb.org/t/p/original";
@@ -29,9 +30,18 @@ function Movie() {
       .then((data) => setSimilarMovies(data.results));
   };
 
+  const fetchWatchProviders = () => {
+    return fetch(
+      `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${API_KEY}`
+    )
+      .then((response) => response.json())
+      .then((data) => setWatchProviders(data.results.US));
+  };
+
   useEffect(() => {
     fetchSimilar();
     fetchMovie();
+    fetchWatchProviders();
   }, [id]);
 
   return (
@@ -49,22 +59,33 @@ function Movie() {
               </div>
               <div class="card-body col-8">
                 <h2 class="card-title">{movie.title}</h2>
-                <div class="mt-3 mb-2 hstack gap-3 ">
-                  <p class="card-text my-auto">
+                <div class="mt-3 row ">
+                  <p class="card-text col-md-2">
                     {String(movie.release_date).split("-")[0]}
                   </p>
-                  <div class="vr"></div>
-                  <p class="card-text my-auto">{movie.runtime} mins</p>
-                  <div class="vr"></div>
+                  <p class="card-text col-md-2">{movie.runtime} mins</p>
+                </div>
+                <div class="row ">
                   {movie.genres &&
                     movie.genres.length > 0 &&
                     movie.genres.map((genre, index) => (
-                      <p class="my-auto" key={genre.id}>
+                      <p class=" col-md-2" key={genre.id}>
                         {genre.name}
                       </p>
                     ))}
                 </div>
                 <p class="card-text">{movie.overview}</p>
+                <h5 class="mt-5">Rent From</h5>
+                <div class="row">
+                  {watchProviders &&
+                    watchProviders.rent &&
+                    watchProviders.rent.length > 0 &&
+                    watchProviders.rent.map((provid, index) => (
+                      <p class="col-sm-3 my-0" key={provid.provider_id}>
+                        {provid.provider_name}
+                      </p>
+                    ))}
+                </div>
               </div>
             </div>
           </div>
