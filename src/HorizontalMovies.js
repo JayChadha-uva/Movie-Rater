@@ -7,7 +7,7 @@ function HorizontalMovies({ moviesList }) {
   return (
     <>
       <div class="container horizontal-scroll-movie">
-        <div class="row text-center gap-2 my-2">
+        <div class="row text-center gap-2">
           {moviesList &&
             moviesList.length > 0 &&
             moviesList.map((movie, index) => (

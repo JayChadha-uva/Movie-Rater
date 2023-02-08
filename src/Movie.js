@@ -5,6 +5,7 @@ import "react-select-search/style.css";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import HorizontalMovies from "./HorizontalMovies";
 
 function Movie() {
   const { id } = useParams();
@@ -29,8 +30,8 @@ function Movie() {
   };
 
   useEffect(() => {
-    fetchMovie();
     fetchSimilar();
+    fetchMovie();
   }, [id]);
 
   return (
@@ -67,7 +68,10 @@ function Movie() {
               </div>
             </div>
           </div>
-          <div>df</div>
+          <div>
+            <h4 class="mt-3">Similar Movies</h4>
+            <HorizontalMovies moviesList={similarMovies}></HorizontalMovies>
+          </div>
         </div>
       </div>
     </>
