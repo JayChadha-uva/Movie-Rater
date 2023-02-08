@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+.horizontal-scroll-movie > .row {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.horizontal-scroll-movie > .row > .col-2 {
+  display: inline-block;
+}

@@ -1,11 +1,9 @@
-/* eslint-disable react/style-prop-object */
 import "./App.css";
-
-import SelectSearch from "react-select-search";
 import "react-select-search/style.css";
 
+import SelectSearch from "react-select-search";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const [idVal, setIdVal] = useState(null);
@@ -22,7 +20,9 @@ function Navbar() {
   return (
     <nav class="navbar sticky-top bg-body-tertiary">
       <div class="container-md my-2">
-        <a class="navbar-brand h1">Movie Rater</a>
+        <Link to={"/"} class="navbar-brand h1">
+          Movie Rater
+        </Link>
         <SelectSearch
           options={[]}
           getOptions={(query) => {

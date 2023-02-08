@@ -8,7 +8,8 @@ import { useParams } from "react-router-dom";
 
 function Movie() {
   const { id } = useParams();
-  const [user, setUser] = useState([]);
+  const [movie, setMovie] = useState([]);
+  const [similarMovies, setSimilarMovies] = useState([]);
 
   const API_KEY = "3d0ac201ad49d76eb1e30e54903dcc54";
   const img_URL = "https://image.tmdb.org/t/p/original";
@@ -16,41 +17,57 @@ function Movie() {
   const fetchMovie = () => {
     return fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`)
       .then((response) => response.json())
-      .then((data) => setUser(data));
+      .then((data) => setMovie(data));
+  };
+
+  const fetchSimilar = () => {
+    return fetch(
+      `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${API_KEY}`
+    )
+      .then((response) => response.json())
+      .then((data) => setSimilarMovies(data.results));
   };
 
   useEffect(() => {
     fetchMovie();
+    fetchSimilar();
   }, [id]);
 
   return (
     <>
-      <p>This is the movie sectoin of the website id; {id}</p>
-
       <div>
         <div class="container container-md">
-          <div class="row row-cols-2">
-            <div class="col">
-              <div class="card my-4" key={user.original_title}>
-                <div class="row ">
-                  <div class="col-4">
-                    <img
-                      src={img_URL + user.poster_path}
-                      class="card-img-top"
-                      alt="..."
-                    />
-                  </div>
-                  <div class="card-body col-8">
-                    <div class="d-flex justify-content-between">
-                      <h5 class="card-title">{user.original_title}</h5>
-                      <p class="card-text me-5">{user.release_date}</p>
-                    </div>
-                    <p class="card-text">{user.overview}</p>
-                  </div>
+          <div class="card my-4" key={movie.title}>
+            <div class="row ">
+              <div class="col-4">
+                <img
+                  src={img_URL + movie.poster_path}
+                  class="card-img-top"
+                  alt="..."
+                />
+              </div>
+              <div class="card-body col-8">
+                <h2 class="card-title">{movie.title}</h2>
+                <div class="mt-3 mb-2 hstack gap-3 ">
+                  <p class="card-text my-auto">
+                    {String(movie.release_date).split("-")[0]}
+                  </p>
+                  <div class="vr"></div>
+                  <p class="card-text my-auto">{movie.runtime} mins</p>
+                  <div class="vr"></div>
+                  {movie.genres &&
+                    movie.genres.length > 0 &&
+                    movie.genres.map((genre, index) => (
+                      <p class="my-auto" key={genre.id}>
+                        {genre.name}
+                      </p>
+                    ))}
                 </div>
+                <p class="card-text">{movie.overview}</p>
               </div>
             </div>
           </div>
+          <div>df</div>
         </div>
       </div>
     </>
