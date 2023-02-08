@@ -42,6 +42,6 @@
   overflow-x: auto;
   white-space: nowrap;
 }
-.horizontal-scroll-movie > .row > .col-2 {
+.horizontal-scroll-movie > .row > .col {
   display: inline-block;
 }

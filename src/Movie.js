@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/style-prop-object */
 import "./App.css";
 
@@ -53,35 +54,42 @@ function Movie() {
               <div class="col-4">
                 <img
                   src={img_URL + movie.poster_path}
-                  class="card-img-top"
+                  class="card-img-top rounded"
                   alt="..."
                 />
               </div>
               <div class="card-body col-8">
                 <h2 class="card-title">{movie.title}</h2>
-                <div class="mt-3 row ">
-                  <p class="card-text col-md-2">
+                <div class="mt-3 mb-1 hstack gap-3">
+                  <p class="card-text mt-0 mb-0">
                     {String(movie.release_date).split("-")[0]}
                   </p>
-                  <p class="card-text col-md-2">{movie.runtime} mins</p>
+                  <div class="vr"></div>
+                  <p class="card-text mt-0">{movie.runtime} mins</p>
                 </div>
-                <div class="row ">
+                <div class="row mb-3">
                   {movie.genres &&
                     movie.genres.length > 0 &&
                     movie.genres.map((genre, index) => (
-                      <p class=" col-md-2" key={genre.id}>
+                      <p class="col mb-0 mt-2" key={genre.id}>
                         {genre.name}
                       </p>
                     ))}
                 </div>
                 <p class="card-text">{movie.overview}</p>
-                <h5 class="mt-5">Rent From</h5>
+                {watchProviders &&
+                watchProviders.rent &&
+                watchProviders.rent.length > 0 ? (
+                  <h5 class="mt-4">Rent From</h5>
+                ) : (
+                  <></>
+                )}
                 <div class="row">
                   {watchProviders &&
                     watchProviders.rent &&
                     watchProviders.rent.length > 0 &&
                     watchProviders.rent.map((provid, index) => (
-                      <p class="col-sm-3 my-0" key={provid.provider_id}>
+                      <p class="col-md-4 my-0" key={provid.provider_id}>
                         {provid.provider_name}
                       </p>
                     ))}
