@@ -36,7 +36,7 @@ function Discover() {
         <div class="container container-md">
           <h1 class="mt-4">Popular Movies</h1>
           <HorizontalMovies moviesList={popularMovies}></HorizontalMovies>
-          <h1 class="mt-4">Trending Movies</h1>
+          <h1 class="mt-4">Trending Movies Today</h1>
           <HorizontalMovies moviesList={trendingMovies}></HorizontalMovies>
           <div class="row"></div>
         </div>

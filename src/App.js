@@ -4,6 +4,7 @@ import Movie from "./Movie";
 import Discover from "./Discover";
 
 import "react-select-search/style.css";
+// eslint-disable-next-line no-unused-vars
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./Navbar";
 
