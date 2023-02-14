@@ -3,6 +3,7 @@
 import "./App.css";
 
 import "react-select-search/style.css";
+import defaultImg from "./Assets/defaultImage.png";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -15,7 +16,7 @@ function Movie() {
   const [watchProviders, setWatchProviders] = useState([]);
 
   const API_KEY = "3d0ac201ad49d76eb1e30e54903dcc54";
-  const img_URL = "https://image.tmdb.org/t/p/original";
+  const img_URL = "https://image.tmdb.org/t/p/w500";
 
   const fetchMovie = () => {
     return fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`)
@@ -50,14 +51,15 @@ function Movie() {
     <>
       <div>
         <div class="container container-md mb-5">
-          <div
-            class="card my-4 rounded-4 movie-card-custom p-1"
-            key={movie.title}
-          >
+          <div class="card my-4 rounded-4 movie-card-custom " key={movie.title}>
             <div class="row ">
               <div class="col-4">
                 <img
-                  src={img_URL + movie.poster_path}
+                  src={
+                    Object.is(movie.poster_path, null)
+                      ? defaultImg
+                      : img_URL + movie.poster_path
+                  }
                   class="card-img-top rounded-4 "
                   alt="..."
                 />
@@ -67,7 +69,7 @@ function Movie() {
                 <div class="mt-3 mb-1 hstack gap-3 nav-bold">
                   <div>
                     <i class="bi bi-star-fill star-color"></i>{" "}
-                    {movie.vote_average}
+                    {Math.round(movie.vote_average * 10) / 10}
                   </div>
                   <div class="vr"></div>
                   <p class="card-text mt-0 mb-0">{movie.runtime} mins</p>
@@ -76,6 +78,7 @@ function Movie() {
                     {String(movie.release_date).split("-")[0]}
                   </p>
                 </div>
+                <p class="card-text mt-3">{movie.overview}</p>
                 <div class="my-3 hstack gap-3 flex-wrap">
                   {movie.genres &&
                     movie.genres.length > 0 &&
@@ -92,7 +95,6 @@ function Movie() {
                       </>
                     ))}
                 </div>
-                <p class="card-text">{movie.overview}</p>
                 {watchProviders &&
                 watchProviders.rent &&
                 watchProviders.rent.length > 0 ? (

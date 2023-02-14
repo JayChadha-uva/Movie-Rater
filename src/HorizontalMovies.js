@@ -1,5 +1,6 @@
 /* eslint-disable react/style-prop-object */
 import { Link } from "react-router-dom";
+import defaultImg from "./Assets/defaultImage.png";
 import "./App.css";
 
 function HorizontalMovies({ moviesList }) {
@@ -13,13 +14,17 @@ function HorizontalMovies({ moviesList }) {
             moviesList.map((movie, index) => (
               <div class="col me-3 px-0">
                 <div
-                  class="card mb-3 p-1 movie-card-custom rounded-4"
+                  class="card mb-3  movie-card-custom rounded-3"
                   key={movie.id}
                 >
                   <Link to={`/movie/${movie.id}`}>
                     <img
-                      src={img_URL + movie.poster_path}
-                      class="img-fluid rounded-4 "
+                      src={
+                        Object.is(movie.poster_path, null)
+                          ? defaultImg
+                          : img_URL + movie.poster_path
+                      }
+                      class="img-fluid rounded-top-3 "
                       alt={movie.title}
                     />
                   </Link>
@@ -27,9 +32,15 @@ function HorizontalMovies({ moviesList }) {
                   <p class="card-title mt-2 ms-2 text-truncate text-start nav-bold">
                     {movie.title}
                   </p>
-                  <div class="card-text text-start ms-2 mb-3">
-                    <i class="bi bi-star-fill star-color"></i>{" "}
-                    {movie.vote_average}
+                  <div class="hstack gap-2 mb-3 ms-2">
+                    <div class="card-text text-start">
+                      <i class="bi bi-star-fill star-color"></i>{" "}
+                      {Math.round(movie.vote_average * 10) / 10}
+                    </div>
+                    <div class="vr"></div>
+                    <div class="card-text">
+                      {String(movie.release_date).split("-")[0]}
+                    </div>
                   </div>
                 </div>
               </div>
