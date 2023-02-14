@@ -11,6 +11,9 @@ import Navbar from "./Navbar";
 function App() {
   return (
     <>
+      <head>
+        <meta name="theme-color" content="#576f72" />
+      </head>
       <Navbar></Navbar>
       <Routes>
         <Route
