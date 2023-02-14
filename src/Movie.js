@@ -50,7 +50,10 @@ function Movie() {
     <>
       <div>
         <div class="container container-md mb-5">
-          <div class="card my-4 rounded-4 movie-card-custom" key={movie.title}>
+          <div
+            class="card my-4 rounded-4 movie-card-custom p-1"
+            key={movie.title}
+          >
             <div class="row ">
               <div class="col-4">
                 <img
@@ -60,48 +63,82 @@ function Movie() {
                 />
               </div>
               <div class="card-body col-8">
-                <h2 class="card-title">{movie.title}</h2>
+                <h2 class="card-title nav-bold">{movie.title}</h2>
                 <div class="mt-3 mb-1 hstack gap-3 nav-bold">
+                  <div>
+                    <i class="bi bi-star-fill star-color"></i>{" "}
+                    {movie.vote_average}
+                  </div>
+                  <div class="vr"></div>
+                  <p class="card-text mt-0 mb-0">{movie.runtime} mins</p>
+                  <div class="vr"></div>
                   <p class="card-text mt-0 mb-0">
                     {String(movie.release_date).split("-")[0]}
                   </p>
-                  <div class="vr"></div>
-                  <p class="card-text mt-0">{movie.runtime} mins</p>
                 </div>
-                <div class="row mb-3">
+                <div class="my-3 hstack gap-3 flex-wrap">
                   {movie.genres &&
                     movie.genres.length > 0 &&
                     movie.genres.map((genre, index) => (
-                      <p class="col mb-0 mt-2" key={genre.id}>
-                        {genre.name}
-                      </p>
+                      <>
+                        <p class="card-text mt-0 mb-0" key={genre.id}>
+                          {genre.name}
+                        </p>
+                        {index + 1 !== movie.genres.length ? (
+                          <div class="vr"></div>
+                        ) : (
+                          <></>
+                        )}
+                      </>
                     ))}
                 </div>
                 <p class="card-text">{movie.overview}</p>
                 {watchProviders &&
                 watchProviders.rent &&
                 watchProviders.rent.length > 0 ? (
-                  <h5 class="mt-4">Rent From</h5>
+                  <h5 class="mt-4 nav-bold">Rent From</h5>
                 ) : (
-                  <></>
+                  watchProviders &&
+                  watchProviders.buy &&
+                  watchProviders.buy.length > 0 && (
+                    <h5 class="mt-4 nav-bold">Buy From</h5>
+                  )
                 )}
                 <div class="row">
                   {watchProviders &&
-                    watchProviders.rent &&
-                    watchProviders.rent.length > 0 &&
-                    watchProviders.rent.map((provid, index) => (
-                      <p class="col-md-4 my-0" key={provid.provider_id}>
-                        {provid.provider_name}
-                      </p>
-                    ))}
+                  watchProviders.rent &&
+                  watchProviders.rent.length > 0
+                    ? watchProviders.rent.map((provid, index) => (
+                        <p
+                          class="col-md-6 col-lg-4 col-xl-3 my-0"
+                          key={provid.provider_id}
+                        >
+                          {provid.provider_name}
+                        </p>
+                      ))
+                    : watchProviders &&
+                      watchProviders.buy &&
+                      watchProviders.buy.length > 0 &&
+                      watchProviders.buy.map((provid, index) => (
+                        <p
+                          class="col-md-6 col-lg-4 col-xl-3 my-0"
+                          key={provid.provider_id}
+                        >
+                          {provid.provider_name}
+                        </p>
+                      ))}
                 </div>
               </div>
             </div>
           </div>
-          <div>
-            <h4 class="mt-3 nav-bold">Similar Movies</h4>
-            <HorizontalMovies moviesList={similarMovies}></HorizontalMovies>
-          </div>
+          {similarMovies && similarMovies.length > 0 ? (
+            <div>
+              <h4 class="mt-4 mb-3 nav-bold">Similar Movies</h4>
+              <HorizontalMovies moviesList={similarMovies}></HorizontalMovies>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>
