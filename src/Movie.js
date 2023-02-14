@@ -43,24 +43,25 @@ function Movie() {
     fetchSimilar();
     fetchMovie();
     fetchWatchProviders();
-  }, [id]);
+    document.title = `${movie.title} | Movie Rater`;
+  }, [id, movie]);
 
   return (
     <>
       <div>
-        <div class="container container-md">
-          <div class="card my-4" key={movie.title}>
+        <div class="container container-md mb-5">
+          <div class="card my-4 rounded-4 movie-card-custom" key={movie.title}>
             <div class="row ">
               <div class="col-4">
                 <img
                   src={img_URL + movie.poster_path}
-                  class="card-img-top rounded"
+                  class="card-img-top rounded-4 "
                   alt="..."
                 />
               </div>
               <div class="card-body col-8">
                 <h2 class="card-title">{movie.title}</h2>
-                <div class="mt-3 mb-1 hstack gap-3">
+                <div class="mt-3 mb-1 hstack gap-3 nav-bold">
                   <p class="card-text mt-0 mb-0">
                     {String(movie.release_date).split("-")[0]}
                   </p>
@@ -98,7 +99,7 @@ function Movie() {
             </div>
           </div>
           <div>
-            <h4 class="mt-3">Similar Movies</h4>
+            <h4 class="mt-3 nav-bold">Similar Movies</h4>
             <HorizontalMovies moviesList={similarMovies}></HorizontalMovies>
           </div>
         </div>

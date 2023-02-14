@@ -12,11 +12,14 @@ function HorizontalMovies({ moviesList }) {
             moviesList.length > 0 &&
             moviesList.map((movie, index) => (
               <div class="col me-4 px-0">
-                <div class="card my-4" key={movie.id}>
+                <div
+                  class="card my-4 movie-card-custom rounded-4"
+                  key={movie.id}
+                >
                   <Link to={`/movie/${movie.id}`}>
                     <img
                       src={img_URL + movie.poster_path}
-                      class="img-fluid rounded "
+                      class="img-fluid rounded-4 "
                       alt={movie.title}
                     />
                   </Link>
