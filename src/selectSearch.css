@@ -68,7 +68,7 @@
   background: var(--select-search-background);
   border: none;
   color: var(--select-search-text);
-  /* border-radius: 3px; */
+  border-radius: 12px;
   outline: none;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -126,7 +126,7 @@
   top: 58px;
   right: 0;
   left: 0;
-  border-radius: 3px;
+  border-radius: 12px;
   display: none;
 }
 
