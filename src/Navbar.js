@@ -11,7 +11,7 @@ import axios from "axios";
 
 function Navbar() {
   const [idVal, setIdVal] = useState(null);
-  const API_KEY = "3d0ac201ad49d76eb1e30e54903dcc54";
+  const API_KEY = process.env.REACT_APP_TMDB_API;
 
   const [user, setUser] = useState([]);
   const [profile, setProfile] = useState([]);
@@ -92,7 +92,7 @@ function Navbar() {
               onChange={setIdVal}
               placeholder="Search Movies"
             />
-            <div class="ms-3">
+            {/* <div class="ms-3">
               {profile ? (
                 <div>
                   <p>Name: {profile.name}</p>
@@ -110,7 +110,7 @@ function Navbar() {
                   Sign in with Google
                 </button>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </nav>

@@ -2,7 +2,6 @@
 /* eslint-disable react/style-prop-object */
 import "./App.css";
 
-import "react-select-search/style.css";
 import defaultImg from "./Assets/defaultImage.png";
 
 import React, { useEffect, useState } from "react";
@@ -15,18 +14,19 @@ function Movie() {
   const [similarMovies, setSimilarMovies] = useState([]);
   const [watchProviders, setWatchProviders] = useState([]);
 
-  const API_KEY = "3d0ac201ad49d76eb1e30e54903dcc54";
   const img_URL = "https://image.tmdb.org/t/p/w500";
 
   const fetchMovie = () => {
-    return fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`)
+    return fetch(
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_API}`
+    )
       .then((response) => response.json())
       .then((data) => setMovie(data));
   };
 
   const fetchSimilar = () => {
     return fetch(
-      `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${API_KEY}`
+      `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${process.env.REACT_APP_TMDB_API}`
     )
       .then((response) => response.json())
       .then((data) => setSimilarMovies(data.results));
@@ -34,7 +34,7 @@ function Movie() {
 
   const fetchWatchProviders = () => {
     return fetch(
-      `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${API_KEY}`
+      `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${process.env.REACT_APP_TMDB_API}`
     )
       .then((response) => response.json())
       .then((data) => setWatchProviders(data.results.US));
