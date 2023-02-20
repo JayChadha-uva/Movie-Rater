@@ -4,47 +4,47 @@ import "./selectSearch.css";
 
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useGoogleLogin, googleLogout } from "@react-oauth/google";
+// import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import SelectSearch from "react-select-search";
-import axios from "axios";
+// import axios from "axios";
 
 function Navbar() {
   const API_KEY = process.env.REACT_APP_TMDB_API;
 
   const navigate = useNavigate();
 
-  const [user, setUser] = useState([]);
-  const [profile, setProfile] = useState([]);
+  // const [user, setUser] = useState([]);
+  // const [profile, setProfile] = useState([]);
   const [idVal, setIdVal] = useState(null);
 
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => setUser(codeResponse),
-    onError: (error) => console.log("Login Failed:", error),
-  });
+  // const login = useGoogleLogin({
+  //   onSuccess: (codeResponse) => setUser(codeResponse),
+  //   onError: (error) => console.log("Login Failed:", error),
+  // });
 
-  useEffect(() => {
-    if (user) {
-      axios
-        .get(
-          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              Accept: "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          setProfile(res.data);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     axios
+  //       .get(
+  //         `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${user.access_token}`,
+  //             Accept: "application/json",
+  //           },
+  //         }
+  //       )
+  //       .then((res) => {
+  //         setProfile(res.data);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }
+  // }, [user]);
 
-  const logOut = () => {
-    googleLogout();
-    setProfile(null);
-  };
+  // const logOut = () => {
+  //   googleLogout();
+  //   setProfile(null);
+  // };
 
   useEffect(() => {
     if (idVal != null) {
@@ -89,7 +89,7 @@ function Navbar() {
               onChange={setIdVal}
               placeholder="Search Movies"
             />
-            <div class="ms-3">
+            {/* <div class="ms-3">
               {profile ? (
                 <div>
                   <p>Name: {profile.name}</p>
@@ -107,7 +107,7 @@ function Navbar() {
                   Sign in with Google
                 </button>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </nav>
