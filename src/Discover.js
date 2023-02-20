@@ -7,7 +7,7 @@ function Discover() {
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [popularMovies, setPopularMovies] = useState([]);
 
-  const API_KEY = "3d0ac201ad49d76eb1e30e54903dcc54";
+  const API_KEY = process.env.REACT_APP_TMDB_API;
 
   const fetchTrendingMovies = () => {
     return fetch(
@@ -29,6 +29,7 @@ function Discover() {
     fetchTrendingMovies();
     fetchPopularMovies();
     document.title = "Discover Movies | Movie Rater";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

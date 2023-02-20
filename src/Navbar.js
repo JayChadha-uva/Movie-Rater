@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import "./App.css";
 // import "react-select-search/style.css";
-import "./selectSearch.css";
 
 import SelectSearch from "react-select-search";
+import "./selectSearch.css";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
@@ -11,7 +11,7 @@ import axios from "axios";
 
 function Navbar() {
   const [idVal, setIdVal] = useState(null);
-  const API_KEY = "3d0ac201ad49d76eb1e30e54903dcc54";
+  const API_KEY = process.env.REACT_APP_TMDB_API;
 
   const [user, setUser] = useState([]);
   const [profile, setProfile] = useState([]);
@@ -66,6 +66,7 @@ function Navbar() {
             <i class="bi bi-film"></i> Movie Rater
           </Link>
           <div class="d-flex justify-content-end align-items-center">
+            {/* <input class="form-control" placeholder="Search Movies" /> */}
             <SelectSearch
               options={[]}
               getOptions={(query) => {
@@ -91,7 +92,7 @@ function Navbar() {
               onChange={setIdVal}
               placeholder="Search Movies"
             />
-            <div class="ms-3">
+            {/* <div class="ms-3">
               {profile ? (
                 <div>
                   <p>Name: {profile.name}</p>
@@ -109,7 +110,7 @@ function Navbar() {
                   Sign in with Google
                 </button>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </nav>
