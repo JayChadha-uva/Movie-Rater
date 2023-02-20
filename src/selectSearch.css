@@ -70,13 +70,6 @@
   cursor: not-allowed;
 }
 
-.select-search-container:not(.select-search-is-disabled).select-search-has-focus
-  .select-search-input,
-.select-search-container:not(.select-search-is-disabled)
-  .select-search-input:hover {
-  /* border-color: var(--select-search-selected); */
-}
-
 .select-search-select {
   background: var(--select-search-background);
   box-shadow: 0.0825rem 0 0.325rem rgba(0, 0, 0, 0.15),
