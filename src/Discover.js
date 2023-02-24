@@ -64,14 +64,12 @@ function Discover() {
 
   return (
     <>
-      <div>
-        <div class="container container-md">
-          <h2 class="mt-4 mb-3 nav-bold">Popular Movies</h2>
-          <HorizontalMovies moviesList={popularMovies}></HorizontalMovies>
-          <h2 class="mt-4 mb-3 nav-bold">Trending Movies Today</h2>
-          <HorizontalMovies moviesList={trendingMovies}></HorizontalMovies>
-          <div class="mb-5 "></div>
-        </div>
+      <div class="container container-md height-requirement">
+        <h2 class="mt-4 mb-3 nav-bold">Popular Movies</h2>
+        <HorizontalMovies moviesList={popularMovies}></HorizontalMovies>
+        <h2 class="mt-4 mb-3 nav-bold">Trending Movies Today</h2>
+        <HorizontalMovies moviesList={trendingMovies}></HorizontalMovies>
+        <div class="mb-5 "></div>
       </div>
     </>
   );

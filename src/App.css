@@ -26,3 +26,7 @@
 .footer-color {
   background-color: #e5e3e9;
 }
+
+.height-requirement {
+  min-height: 100vh;
+}
