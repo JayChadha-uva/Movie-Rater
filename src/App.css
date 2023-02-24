@@ -30,3 +30,7 @@
 .height-requirement {
   min-height: 100vh;
 }
+
+body {
+  background-color: #f2f1f5;
+}
