@@ -1,4 +1,7 @@
 /* eslint-disable react/style-prop-object */
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+
 import "./App.css";
 import Movie from "./Movie";
 import Discover from "./Discover";
