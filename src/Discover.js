@@ -9,58 +9,27 @@ function Discover() {
 
   const API_KEY = process.env.REACT_APP_TMDB_API;
 
-  // const fetchTrendingMovies = () => {
-  //   return fetch(
-  //     `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`
-  //   )
-  //     .then((response) => response.json())
-  //     .then((data) => setTrendingMovies(data.results));
-  // };
-
-  // const fetchPopularMovies = () => {
-  //   return fetch(
-  //     `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US`
-  //   )
-  //     .then((response) => response.json())
-  //     .then((data) => setPopularMovies(data.results));
-  // };
-
-  // async function fetchTrendingMovies() {
-  //   const response = await fetch(
-  //     `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`
-  //   );
-  //   const movies = await response.json();
-  //   return movies;
-  // }
-  // fetchTrendingMovies().then((movies) => {
-  //   setTrendingMovies(movies.results); // fetched movies
-  // });
-
-  async function fetchTrendingAndPopular() {
-    const [trendingResponse, popularResponse] = await Promise.all([
-      fetch(
-        `https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`
-      ),
-      fetch(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US`
-      ),
-    ]);
-    const trendingMovies = await trendingResponse.json();
-    const popularMovies = await popularResponse.json();
-    return [trendingMovies, popularMovies];
-  }
-  fetchTrendingAndPopular()
-    .then(([trendingMovies, popularMovies]) => {
-      setTrendingMovies(trendingMovies.results);
-      setPopularMovies(popularMovies.results);
-    })
-    .catch((error) => {});
-
   useEffect(() => {
-    fetchTrendingAndPopular();
-    document.title = "Discover Movies | Movie Rater";
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTrendingMovies(data.results);
+      })
+      .catch((e) => {
+        console.error(`An error occurred: ${e}`);
+      });
+
+    fetch(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setPopularMovies(data.results);
+      })
+      .catch((e) => {
+        console.error(`An error occurred: ${e}`);
+      });
+  }, [API_KEY]);
 
   return (
     <>

@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/style-prop-object */
 import "./App.css";
 
 import defaultImg from "./Assets/defaultImage.png";
@@ -15,37 +13,44 @@ function Movie() {
   const [watchProviders, setWatchProviders] = useState([]);
 
   const img_URL = "https://image.tmdb.org/t/p/w500";
-
-  const fetchMovie = () => {
-    return fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_API}`
-    )
-      .then((response) => response.json())
-      .then((data) => setMovie(data));
-  };
-
-  const fetchSimilar = () => {
-    return fetch(
-      `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${process.env.REACT_APP_TMDB_API}`
-    )
-      .then((response) => response.json())
-      .then((data) => setSimilarMovies(data.results));
-  };
-
-  const fetchWatchProviders = () => {
-    return fetch(
-      `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${process.env.REACT_APP_TMDB_API}`
-    )
-      .then((response) => response.json())
-      .then((data) => setWatchProviders(data.results.US));
-  };
+  const API_KEY = process.env.REACT_APP_TMDB_API;
 
   useEffect(() => {
-    fetchSimilar();
-    fetchMovie();
-    fetchWatchProviders();
+    fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setMovie(data);
+      })
+      .catch((e) => {
+        console.error(`An error occurred: ${e}`);
+      });
+
+    fetch(
+      `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${API_KEY}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setSimilarMovies(data.results);
+      })
+      .catch((e) => {
+        console.error(`An error occurred: ${e}`);
+      });
+
+    fetch(
+      `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${API_KEY}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setWatchProviders(data.results.US);
+      })
+      .catch((e) => {
+        console.error(`An error occurred: ${e}`);
+      });
+  }, [API_KEY, id]);
+
+  useEffect(() => {
     document.title = `${movie.title} | Movie Rater`;
-  }, [id, movie]);
+  }, [movie]);
 
   return (
     <>
