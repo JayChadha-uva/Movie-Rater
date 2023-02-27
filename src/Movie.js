@@ -10,6 +10,7 @@ function Movie() {
   const { id } = useParams();
   const [movie, setMovie] = useState([]);
   const [similarMovies, setSimilarMovies] = useState([]);
+  const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [watchProviders, setWatchProviders] = useState([]);
 
   const img_URL = "https://image.tmdb.org/t/p/w500";
@@ -28,6 +29,15 @@ function Movie() {
     fetch(
       `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${API_KEY}`
     )
+      .then((response) => response.json())
+      .then((data) => {
+        setRecommendedMovies(data.results);
+      })
+      .catch((e) => {
+        console.error(`An error occurred: ${e}`);
+      });
+
+    fetch(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=${API_KEY}`)
       .then((response) => response.json())
       .then((data) => {
         setSimilarMovies(data.results);
@@ -137,6 +147,14 @@ function Movie() {
             </div>
           </div>
         </div>
+        {recommendedMovies && recommendedMovies.length > 0 ? (
+          <div>
+            <h4 class="mt-4 mb-3 nav-bold">Recommended Movies</h4>
+            <HorizontalMovies moviesList={recommendedMovies}></HorizontalMovies>
+          </div>
+        ) : (
+          <></>
+        )}
         {similarMovies && similarMovies.length > 0 ? (
           <div>
             <h4 class="mt-4 mb-3 nav-bold">Similar Movies</h4>
