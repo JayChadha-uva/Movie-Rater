@@ -1,10 +1,7 @@
-/* eslint-disable react/style-prop-object */
-import { Link } from "react-router-dom";
-import defaultImg from "./Assets/defaultImage.png";
 import "./App.css";
+import ImageRoll from "./ImageRoll";
 
 function HorizontalMovies({ moviesList }) {
-  const img_URL = "https://image.tmdb.org/t/p/w500";
   return (
     <>
       <div class="container horizontal-scroll-movie">
@@ -17,18 +14,7 @@ function HorizontalMovies({ moviesList }) {
                   class="card mb-3  movie-card-custom rounded-3"
                   key={movie.id}
                 >
-                  <Link to={`/movie/${movie.id}`}>
-                    <img
-                      src={
-                        Object.is(movie.poster_path, null)
-                          ? defaultImg
-                          : img_URL + movie.poster_path
-                      }
-                      class="img-fluid rounded-top-3 "
-                      alt={movie.title}
-                    />
-                  </Link>
-
+                  <ImageRoll movieInput={movie}></ImageRoll>
                   <p class="card-title mt-2 ms-2 text-truncate text-start nav-bold">
                     {movie.title}
                   </p>
