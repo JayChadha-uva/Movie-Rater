@@ -74,11 +74,11 @@ function Movie() {
                     ? defaultImg
                     : img_URL + movie.poster_path
                 }
-                class="card-img-top rounded-4 "
+                class="card-img rounded-0 rounded-start-4 "
                 alt="..."
               />
             </div>
-            <div class="card-body col-8">
+            <div class="card-body col-8 ps-0 ps-md-2 ps-lg-3">
               <h2 class="card-title nav-bold">{movie.title}</h2>
               <div class="mt-3 mb-1 hstack gap-3 nav-bold">
                 <div>
@@ -109,60 +109,206 @@ function Movie() {
                     </>
                   ))}
               </div>
+
+              {watchProviders &&
+              watchProviders.flatrate &&
+              watchProviders.flatrate.length > 0 ? (
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary mt-2 me-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#streamingModal"
+                >
+                  Stream <i class="bi bi-arrow-up-right-square"></i>
+                </button>
+              ) : (
+                <></>
+              )}
+
               {watchProviders &&
               watchProviders.rent &&
               watchProviders.rent.length > 0 ? (
-                <h5 class="mt-4 nav-bold">Rent From</h5>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary mt-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#rentModal"
+                >
+                  Rent <i class="bi bi-arrow-up-right-square"></i>
+                </button>
               ) : (
                 watchProviders &&
                 watchProviders.buy &&
                 watchProviders.buy.length > 0 && (
-                  <h5 class="mt-4 nav-bold">Buy From</h5>
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary mt-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#buyModal"
+                  >
+                    Buy <i class="bi bi-arrow-up-right-square"></i>
+                  </button>
                 )
               )}
-              <div class="row">
-                {watchProviders &&
-                watchProviders.rent &&
-                watchProviders.rent.length > 0
-                  ? watchProviders.rent.map((provid, index) => (
-                      <p
-                        class="col-md-6 col-lg-4 col-xl-3 my-0"
-                        key={provid.provider_id}
+              <div class="modal fade" id="streamingModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        Stream {movie.title} from
+                      </h1>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="vstack gap-3">
+                        {watchProviders &&
+                          watchProviders.flatrate &&
+                          watchProviders.flatrate.length > 0 &&
+                          watchProviders.flatrate.map((provid, index) => (
+                            <div class="d-flex justify-content-start align-items-center">
+                              <img
+                                class="icon-img rounded-3"
+                                src={img_URL + provid.logo_path}
+                                alt=""
+                              />{" "}
+                              <h5 class="ms-2" key={provid.provider_id}>
+                                {provid.provider_name}
+                              </h5>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
                       >
-                        {provid.provider_name}
-                      </p>
-                    ))
-                  : watchProviders &&
-                    watchProviders.buy &&
-                    watchProviders.buy.length > 0 &&
-                    watchProviders.buy.map((provid, index) => (
-                      <p
-                        class="col-md-6 col-lg-4 col-xl-3 my-0"
-                        key={provid.provider_id}
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade" id="rentModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        Rent {movie.title} from
+                      </h1>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="vstack gap-3">
+                        {watchProviders &&
+                          watchProviders.rent &&
+                          watchProviders.rent.length > 0 &&
+                          watchProviders.rent.map((provid, index) => (
+                            <div class="d-flex justify-content-start align-items-center">
+                              <img
+                                class="icon-img rounded-3"
+                                src={img_URL + provid.logo_path}
+                                alt=""
+                              />{" "}
+                              <h5 class="ms-2" key={provid.provider_id}>
+                                {provid.provider_name}
+                              </h5>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
                       >
-                        {provid.provider_name}
-                      </p>
-                    ))}
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade" id="buyModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        Buy {movie.title} from
+                      </h1>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="vstack gap-3">
+                        {watchProviders &&
+                          watchProviders.buy &&
+                          watchProviders.buy.length > 0 &&
+                          watchProviders.buy.map((provid, index) => (
+                            <div class="d-flex justify-content-start align-items-center">
+                              <img
+                                class="icon-img rounded-3"
+                                src={img_URL + provid.logo_path}
+                                alt=""
+                              />{" "}
+                              <h5 class="ms-2" key={provid.provider_id}>
+                                {provid.provider_name}
+                              </h5>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        {recommendedMovies && recommendedMovies.length > 0 ? (
-          <div>
-            <h4 class="mt-4 mb-3 nav-bold">Recommended Movies</h4>
-            <HorizontalMovies moviesList={recommendedMovies}></HorizontalMovies>
-          </div>
-        ) : (
-          <></>
-        )}
-        {similarMovies && similarMovies.length > 0 ? (
-          <div>
-            <h4 class="mt-4 mb-3 nav-bold">Similar Movies</h4>
-            <HorizontalMovies moviesList={similarMovies}></HorizontalMovies>
-          </div>
-        ) : (
-          <></>
-        )}
+        <div class="mt-5">
+          {recommendedMovies && recommendedMovies.length > 0 ? (
+            <div>
+              <h4 class="mt-4 mb-3 nav-bold">Recommended Movies</h4>
+              <HorizontalMovies
+                moviesList={recommendedMovies}
+              ></HorizontalMovies>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+        <div>
+          {similarMovies && similarMovies.length > 0 ? (
+            <div>
+              <h4 class="mt-4 mb-3 nav-bold">Similar Movies</h4>
+              <HorizontalMovies moviesList={similarMovies}></HorizontalMovies>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
     </>
   );

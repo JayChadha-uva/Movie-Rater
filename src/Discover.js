@@ -39,6 +39,7 @@ function Discover() {
         <h2 class="mt-4 mb-3 nav-bold">Trending Movies Today</h2>
         <HorizontalMovies moviesList={trendingMovies}></HorizontalMovies>
         <div class="mb-5 "></div>
+        <h4 class="mt-4 mb-3 nav-bold">Explore By Genre</h4>
       </div>
     </>
   );
