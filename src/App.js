@@ -19,6 +19,7 @@ function App() {
       </head>
       <Navbar></Navbar>
       <Routes>
+        <Route path="/movie/:id" element={<Movie />} />
         <Route
           exact
           path="/"
@@ -28,7 +29,6 @@ function App() {
             </>
           }
         />
-        <Route path="/movie/:id" element={<Movie />} />
       </Routes>
       <Footer></Footer>
     </>
