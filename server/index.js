@@ -6,8 +6,6 @@ const users = require("./routes/users");
 
 const mysql = require("mysql2/promise");
 
-let booksNew = [];
-
 app.get("/users", async (req, res) => {
   try {
     const connection = await mysql.createConnection({
@@ -49,16 +47,6 @@ app.get("/home", function (req, res) {
 });
 
 app.post("/create", async (req, res) => {
-  const newMovie = {
-    movieID: req.body.movieID,
-    rating: req.body.rating,
-    reviewTitle: req.body.reviewTitle,
-    reviewText: req.body.reviewText,
-  };
-
-  books.push(newMovie);
-  console.log(books);
-
   try {
     const connection = await mysql.createConnection({
       host: "mysql01.cs.virginia.edu",

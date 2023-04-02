@@ -39,10 +39,20 @@ class Create extends Component {
 
     axios
       .post("http://localhost:1234/create", book)
-      .then(() => console.log("Book Created"))
+      .then(() => {})
       .catch((err) => {
         console.error(err);
       });
+
+    this.setState({
+      rating: 0,
+      reviewTitle: "",
+      reviewText: "",
+    });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
 
   render() {
@@ -61,6 +71,7 @@ class Create extends Component {
               </label>
               <input
                 type="range"
+                required={true}
                 class="form-range"
                 name="rating"
                 onChange={this.handleRangeChange}
@@ -73,27 +84,32 @@ class Create extends Component {
             </div>
             <div className="form-group">
               <input
+                required={true}
                 type="text"
                 className="form-control"
                 name="reviewTitle"
                 placeholder="Review Title"
+                value={this.state.reviewTitle}
                 onChange={this.handleInputChange}
               />
             </div>
             <br />
             <div className="form-group">
-              <input
+              <textarea
+                required={true}
                 type="text"
                 className="form-control"
                 name="reviewText"
-                placeholder="Review"
+                placeholder="Write your review"
+                rows={4}
+                value={this.state.reviewText}
                 onChange={this.handleInputChange}
-              />
+              ></textarea>
             </div>
             <br />
-            <div style={{ width: "30%" }}>
+            <div>
               <button className="btn btn-success" type="submit">
-                Create
+                Submit
               </button>
             </div>
           </form>

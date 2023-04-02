@@ -19,7 +19,7 @@ class Review extends Component {
 
   render() {
     return (
-      <div>
+      <div class="mt-3">
         <h3 class="nav-bold">Reviews</h3>
         {this.state.reviews.map((review) => (
           <div class="card mb-3 rounded-4">
