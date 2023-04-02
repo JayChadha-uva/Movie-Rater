@@ -7,7 +7,7 @@ import Movie from "./Movie";
 import Discover from "./Discover";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-
+import Users from "./components/User";
 // eslint-disable-next-line no-unused-vars
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
@@ -17,6 +17,7 @@ function App() {
       <head>
         <meta name="theme-color" content="#576f72" />
       </head>
+      <Users></Users>
       <Navbar></Navbar>
       <Routes>
         <Route path="/movie/:id" element={<Movie />} />
