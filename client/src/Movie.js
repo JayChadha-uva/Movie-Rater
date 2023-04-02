@@ -5,6 +5,8 @@ import defaultImg from "./Assets/defaultImage.png";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import HorizontalMovies from "./HorizontalMovies";
+import Create from "./components/Create";
+import Review from "./components/Review";
 
 function Movie() {
   const { id } = useParams();
@@ -318,6 +320,9 @@ function Movie() {
             <></>
           )}
         </div>
+        <Create movieID={id}></Create>
+        <br></br>
+        <Review movieID={id}></Review>
       </div>
     </>
   );
