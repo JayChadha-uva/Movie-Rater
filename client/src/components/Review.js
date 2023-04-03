@@ -22,12 +22,21 @@ class Review extends Component {
       <div class="mt-3">
         <h3 class="nav-bold">Reviews</h3>
         {this.state.reviews.map((review) => (
-          <div class="card mb-3 rounded-4">
+          <div class="card mb-3 rounded-4 border-0">
             <div class="card-body">
               <h5 class="card-title">{review.reviewTitle}</h5>
               <h6 class="card-subtitle mb-2 text-body-secondary">
-                <i class="bi bi-star-fill star-color"></i> {review.rating}
+                <i class="bi bi-star-fill star-color"></i> {review.rating} -{" "}
+                {new Date(review.date).toLocaleString("en-US", {
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: true,
+                  month: "2-digit",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
               </h6>
+
               <p class="card-text">{review.reviewText}</p>
             </div>
           </div>

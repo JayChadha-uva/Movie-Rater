@@ -31,7 +31,6 @@ app.use(
   })
 );
 
-app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -55,12 +54,22 @@ app.post("/create", async (req, res) => {
       database: "jrc7qt",
     });
 
-    const [rows, fields] = await connection.query(
-      `INSERT INTO Movie (movieID, rating, reviewTitle, reviewText) VALUES(${req.body.movieID}, ${req.body.rating}, '${req.body.reviewTitle}', '${req.body.reviewText}');`
-    );
+    const query =
+      "INSERT INTO Movie (movieID, rating, reviewTitle, reviewText, date) VALUES (?, ?, ?, ?, ?)";
+    const params = [
+      req.body.movieID,
+      req.body.rating,
+      req.body.reviewTitle,
+      req.body.reviewText,
+      req.body.date,
+    ];
+
+    const [rows, fields] = await connection.execute(query, params);
+
+    res.status(200).send("Review created successfully");
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error retrieving users from database");
+    res.status(500).send("Error creating review");
   }
 });
 
@@ -76,7 +85,7 @@ app.get("/api/movie/:id", async (req, res) => {
     });
 
     const [rows, fields] = await connection.query(
-      `SELECT * FROM Movie WHERE movieID = ${id}`
+      `SELECT * FROM Movie WHERE movieID = ${id} ORDER BY date DESC`
     );
     res.json(rows);
   } catch (err) {

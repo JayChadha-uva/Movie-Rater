@@ -30,11 +30,15 @@ class Create extends Component {
 
     const { movieID, rating, reviewTitle, reviewText } = this.state;
 
+    const sixHoursAgo = new Date();
+    sixHoursAgo.setHours(sixHoursAgo.getHours() - 6);
+
     const book = {
       movieID,
       rating,
       reviewTitle,
       reviewText,
+      date: sixHoursAgo.toISOString().slice(0, 19).replace("T", " "),
     };
 
     axios
@@ -61,13 +65,10 @@ class Create extends Component {
         <h3 class="nav-bold mt-5">Write a Review</h3>
         <div className="container">
           <form onSubmit={this.handleSubmit}>
-            <div className="form-group">
-              <label for="customRange2" class="form-label me-3">
-                Rating
-              </label>
+            <div className="form-group" class="d-flex flex-nowrap">
               <label for="customRange2" class="form-label">
-                <i class="bi bi-star-fill star-color"></i> {this.state.rating}{" "}
-                stars
+                <i class="bi bi-star-fill star-color"></i>
+                {" " + this.state.rating + " stars"}
               </label>
               <input
                 type="range"
@@ -101,7 +102,7 @@ class Create extends Component {
                 className="form-control"
                 name="reviewText"
                 placeholder="Write your review"
-                rows={4}
+                rows={3}
                 value={this.state.reviewText}
                 onChange={this.handleInputChange}
               ></textarea>
