@@ -58,7 +58,8 @@ app.get("/api/movie/:id", async (req, res) => {
     });
 
     const [rows, fields] = await connection.query(
-      `SELECT * FROM Review WHERE movie_id = ${id} ORDER BY review_date DESC`
+      "SELECT * FROM Review WHERE movie_id = ? ORDER BY review_date DESC",
+      [id]
     );
     res.json(rows);
   } catch (err) {
