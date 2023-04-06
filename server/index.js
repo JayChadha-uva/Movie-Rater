@@ -1,27 +1,10 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+let dotenv = require("dotenv").config();
 const app = express();
-const users = require("./routes/users");
 
 const mysql = require("mysql2/promise");
-
-app.get("/users", async (req, res) => {
-  try {
-    const connection = await mysql.createConnection({
-      host: "mysql01.cs.virginia.edu",
-      user: "jrc7qt",
-      password: "LS##%u&Ss6QS3&Wg^4Zn",
-      database: "jrc7qt",
-    });
-
-    const [rows, fields] = await connection.query("SELECT * FROM customer");
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error retrieving users from database");
-  }
-});
 
 //use cors to allow cross origin resource sharing
 app.use(
@@ -34,34 +17,24 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-let books = [];
-
-app.get("/home", function (req, res) {
-  console.log("Inside Home Login");
-  res.writeHead(200, {
-    "Content-Type": "application/json",
-  });
-  console.log("Books : ", JSON.stringify(books));
-  res.end(JSON.stringify(books));
-});
-
 app.post("/create", async (req, res) => {
   try {
     const connection = await mysql.createConnection({
-      host: "mysql01.cs.virginia.edu",
-      user: "jrc7qt",
-      password: "LS##%u&Ss6QS3&Wg^4Zn",
-      database: "jrc7qt",
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
     });
 
     const query =
-      "INSERT INTO Movie (movieID, rating, reviewTitle, reviewText, date) VALUES (?, ?, ?, ?, ?)";
+      "INSERT INTO Review (movie_id, rating, review_title, review_text, review_date, email) VALUES (?, ?, ?, ?, ?, ?)";
     const params = [
       req.body.movieID,
       req.body.rating,
       req.body.reviewTitle,
       req.body.reviewText,
       req.body.date,
+      "ebarrett21@gmail.com", // TODO: change to be the user signed in
     ];
 
     const [rows, fields] = await connection.execute(query, params);
@@ -78,26 +51,20 @@ app.get("/api/movie/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const connection = await mysql.createConnection({
-      host: "mysql01.cs.virginia.edu",
-      user: "jrc7qt",
-      password: "LS##%u&Ss6QS3&Wg^4Zn",
-      database: "jrc7qt",
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
     });
 
     const [rows, fields] = await connection.query(
-      `SELECT * FROM Movie WHERE movieID = ${id} ORDER BY date DESC`
+      `SELECT * FROM Review WHERE movie_id = ${id} ORDER BY review_date DESC`
     );
     res.json(rows);
   } catch (err) {
     console.error(err);
     res.status(500).send("Error retrieving users from database");
   }
-});
-
-app.use("/api/users", users);
-
-app.get("/api", (req, res) => {
-  res.send("hello word form express");
 });
 
 app.listen(1234);
