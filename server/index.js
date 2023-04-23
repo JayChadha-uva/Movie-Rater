@@ -92,6 +92,32 @@ app.get("/api/movie/:id", async (req, res) => {
   }
 });
 
+// Specify order by parameters
+app.get("/api/movie/:field/:order/:id", async (req, res) => {
+  const field = req.params.field;
+  const order = req.params.order;
+  const id = req.params.id;
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const query =
+      "SELECT * FROM Review WHERE movie_id = ? ORDER BY " + field + " " + order;
+    const params = [id];
+
+    const [rows, fields] = await connection.query(query, params);
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
 // login part
 app.post("/register", async (req, res) => {
   try {
