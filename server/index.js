@@ -7,13 +7,16 @@ const app = express();
 const auth = require("./auth");
 const mysql = require("mysql2/promise");
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
 //use cors to allow cross origin resource sharing
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -143,27 +146,6 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.get("/api/movie/:email", async (req, res) => {
-  const email = req.params.email;
-  try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
-    const [rows, fields] = await connection.query(
-      "SELECT * FROM Users WHERE email=?",
-      [id]
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error retrieving users from database");
-  }
-});
-
 app.post("/login", async (req, res) => {
   try {
     const connection = await mysql.createConnection({
@@ -181,7 +163,13 @@ app.post("/login", async (req, res) => {
     const [rows, fields] = await connection.execute(query, params);
 
     if (rows.length > 0) {
-      res.send(rows);
+      console.log("Setting cookie:", rows[0].email);
+      res.cookie("myCookie", "cookie", {
+        maxAge: 900000,
+        sameSite: "lax",
+        httpOnly: true,
+      });
+      res.send({ message: "Login successful" });
     } else {
       res.send({ message: "Wrong User name or password" });
     }
