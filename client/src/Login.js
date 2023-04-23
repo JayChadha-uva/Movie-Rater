@@ -15,7 +15,8 @@ function Login() {
       email: email,
       password: password,
     }).then((response) => {
-      if (response.data.message) {
+      if (response.data.message === "Login successful") {
+        sessionStorage.setItem("email", email);
         setLoginStatus(response.data.message);
       } else {
         setLoginStatus(response.data[0].email);

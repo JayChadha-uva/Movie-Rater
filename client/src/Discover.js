@@ -2,15 +2,14 @@ import "./App.css";
 
 import React, { useEffect, useState } from "react";
 import HorizontalMovies from "./HorizontalMovies";
-import Cookies from "js-cookie";
 
 function Discover() {
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [popularMovies, setPopularMovies] = useState([]);
 
   const API_KEY = process.env.REACT_APP_TMDB_API;
-  const myCookieValue = Cookies.get("emailCookie");
-  console.log(myCookieValue);
+  var emailStorage = sessionStorage.getItem("email");
+  console.log(emailStorage);
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`)
@@ -37,7 +36,7 @@ function Discover() {
   return (
     <>
       <div class="container container-md height-requirement">
-        <p>Cookie value: {myCookieValue}</p>
+        <p>Cookie value: {emailStorage}</p>
         <h2 class="mt-4 mb-3 nav-bold">Popular Movies</h2>
         <HorizontalMovies moviesList={popularMovies}></HorizontalMovies>
         <h2 class="mt-4 mb-3 nav-bold">Trending Movies Today</h2>

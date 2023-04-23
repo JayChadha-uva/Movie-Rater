@@ -4,8 +4,6 @@ const app = express();
 const auth = require("./auth");
 const mysql = require("mysql2/promise");
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -168,11 +166,6 @@ app.post("/login", async (req, res) => {
 
     if (rows.length > 0) {
       console.log("Setting cookie:", rows[0].email);
-      res.cookie("emailCookie", "cookie", {
-        maxAge: 900000,
-        domain: "localhost",
-        httpOnly: true,
-      });
       res.send({ message: "Login successful" });
     } else {
       res.send({ message: "Wrong User name or password" });
