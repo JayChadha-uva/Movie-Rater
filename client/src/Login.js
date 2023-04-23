@@ -18,8 +18,10 @@ function Login() {
       if (response.data.message === "Login successful") {
         sessionStorage.setItem("email", email);
         setLoginStatus(response.data.message);
+        setEmail("");
+        setPassword("");
       } else {
-        setLoginStatus(response.data[0].email);
+        setLoginStatus(response.data.message);
         setFirstName("");
         setLastName("");
         setPassword("");
