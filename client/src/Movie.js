@@ -1,4 +1,5 @@
 import "./App.css";
+import axios from "axios";
 
 import defaultImg from "./Assets/defaultImage.png";
 
@@ -62,7 +63,20 @@ function Movie() {
 
   useEffect(() => {
     document.title = `${movie.title} | Movie Rater`;
-  }, [movie]);
+
+    const movieSubmit = {
+      movieID: id,
+      title: movie.title,
+      imgURL: movie.poster_path,
+    };
+
+    axios
+      .post("http://localhost:1234/insert/movie", movieSubmit)
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [movie.title]);
 
   return (
     <>

@@ -46,6 +46,29 @@ app.post("/create", async (req, res) => {
   }
 });
 
+// add movie to DB
+app.post("/insert/movie", async (req, res) => {
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const query =
+      "INSERT INTO Movie (movie_id, title, image_url) VALUES (?, ?, ?)";
+    const params = [req.body.movieID, req.body.title, req.body.imgURL];
+
+    const [rows, fields] = await connection.execute(query, params);
+
+    res.status(200).send("Review created successfully");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error creating review");
+  }
+});
+
 // Define routes
 app.get("/api/movie/:id", async (req, res) => {
   const id = req.params.id;
@@ -66,6 +89,47 @@ app.get("/api/movie/:id", async (req, res) => {
     console.error(err);
     res.status(500).send("Error retrieving users from database");
   }
+});
+
+// login part
+app.post("/register", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+
+  con.query(
+    "INSERT INTO Users (email, first_name, last_name, password) VALUES(?, ?, ?, ?)",
+    [email, firstName, lastName, password],
+    (err, result) => {
+      if (result) {
+        res.send(result);
+      } else {
+        res.send({ message: "Error, enter the required fields" });
+      }
+    }
+  );
+});
+
+app.post("/login", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  con.query(
+    "SELECT * FROM Users WHERE email=? and password =? ",
+    [email, password],
+    (err, result) => {
+      if (err) {
+        res.setEncoding({ err: err });
+      } else {
+        if (result.length > 0) {
+          res.send(result);
+        } else {
+          res.send({ message: "Wrong User name or password" });
+        }
+      }
+    }
+  );
 });
 
 app.listen(1234);
