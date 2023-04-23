@@ -2,8 +2,9 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 let dotenv = require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const app = express();
-
+const auth = require("./auth");
 const mysql = require("mysql2/promise");
 
 //use cors to allow cross origin resource sharing
@@ -124,12 +125,38 @@ app.post("/login", (req, res) => {
       } else {
         if (result.length > 0) {
           res.send(result);
+          const token = jwt.sign(
+            {
+              userEmail: email,
+            },
+            "RANDOM-TOKEN",
+            { expiresIn: "24h" }
+          );
         } else {
           res.send({ message: "Wrong User name or password" });
         }
       }
     }
   );
+});
+
+// auth
+
+app.get("/auth-endpoint", auth, (request, response) => {
+  response.json({ message: "You are authorized to access me" });
+});
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  next();
 });
 
 app.listen(1234);
