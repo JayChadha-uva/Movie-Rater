@@ -6,6 +6,8 @@ class Review extends Component {
     this.state = {
       movieID: props.movieID,
       reviews: [],
+      sort: "review_date",
+      sortOrder: "DESC",
     };
   }
 
@@ -17,10 +19,72 @@ class Review extends Component {
     );
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.state.sort !== prevState.sort ||
+      this.state.sortOrder !== prevState.sortOrder
+    ) {
+      fetch(
+        `/api/movie/${this.state.sort}/${this.state.sortOrder}/${this.state.movieID}`
+      ).then((res) =>
+        res.json().then((reviews) => {
+          this.setState({ reviews: reviews });
+        })
+      );
+    }
+  }
+
   render() {
     return (
       <div class="mt-3">
         <h3 class="nav-bold">Reviews</h3>
+
+        <div
+          class={
+            "btn-group " +
+            (this.state.sortOrder === "ASC" ? "dropup" : "dropdown") +
+            " mb-3"
+          }
+        >
+          <button
+            type="button"
+            class="btn btn-secondary"
+            id="dropdownReviewSortButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Sort by{" "}
+            {this.state.sort === "review_date" ? "review date" : "rating"}
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+            onClick={() =>
+              this.setState({
+                sortOrder: this.state.sortOrder === "ASC" ? "DESC" : "ASC",
+              })
+            }
+          />
+          <ul class="dropdown-menu" aria-labelledby="dropdownReviewSortButton">
+            <li>
+              <button
+                class="dropdown-item"
+                onClick={() => this.setState({ sort: "review_date" })}
+              >
+                Date
+              </button>
+            </li>
+            <li>
+              <button
+                class="dropdown-item"
+                onClick={() => this.setState({ sort: "rating" })}
+              >
+                Rating
+              </button>
+            </li>
+          </ul>
+        </div>
+
         {this.state.reviews.map((review) => (
           <div class="card mb-3 rounded-4 border-0">
             <div class="card-body">
