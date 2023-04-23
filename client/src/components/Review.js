@@ -39,13 +39,7 @@ class Review extends Component {
       <div class="mt-3">
         <h3 class="nav-bold">Reviews</h3>
 
-        <div
-          class={
-            "btn-group " +
-            (this.state.sortOrder === "ASC" ? "dropup" : "dropdown") +
-            " mb-3"
-          }
-        >
+        <div class="btn-group mb-3">
           <button
             type="button"
             class="btn btn-secondary"
@@ -56,15 +50,6 @@ class Review extends Component {
             Sort by{" "}
             {this.state.sort === "review_date" ? "review date" : "rating"}
           </button>
-          <button
-            type="button"
-            class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
-            onClick={() =>
-              this.setState({
-                sortOrder: this.state.sortOrder === "ASC" ? "DESC" : "ASC",
-              })
-            }
-          />
           <ul class="dropdown-menu" aria-labelledby="dropdownReviewSortButton">
             <li>
               <button
@@ -83,6 +68,24 @@ class Review extends Component {
               </button>
             </li>
           </ul>
+
+          <div
+            class={
+              "btn-group " +
+              (this.state.sortOrder === "ASC" ? "dropup" : "dropdown")
+            }
+          >
+            <button class="btn btn-secondary p-0"></button>
+            <button
+              type="button"
+              class="btn btn-secondary dropdown-toggle dropdown-toggle-split rounded-right"
+              onClick={() =>
+                this.setState({
+                  sortOrder: this.state.sortOrder === "ASC" ? "DESC" : "ASC",
+                })
+              }
+            />
+          </div>
         </div>
 
         {this.state.reviews.map((review) => (
