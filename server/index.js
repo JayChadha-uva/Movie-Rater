@@ -1,22 +1,26 @@
 const express = require("express");
-const logger = require("morgan");
-const cors = require("cors");
 let dotenv = require("dotenv").config();
-const jwt = require("jsonwebtoken");
 const app = express();
 const auth = require("./auth");
 const mysql = require("mysql2/promise");
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
-//use cors to allow cross origin resource sharing
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+app.options("/login", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -164,9 +168,9 @@ app.post("/login", async (req, res) => {
 
     if (rows.length > 0) {
       console.log("Setting cookie:", rows[0].email);
-      res.cookie("myCookie", "cookie", {
+      res.cookie("emailCookie", "cookie", {
         maxAge: 900000,
-        sameSite: "lax",
+        domain: "localhost",
         httpOnly: true,
       });
       res.send({ message: "Login successful" });

@@ -9,7 +9,8 @@ function Discover() {
   const [popularMovies, setPopularMovies] = useState([]);
 
   const API_KEY = process.env.REACT_APP_TMDB_API;
-  const myCookieValue = Cookies.get("myCookie");
+  const myCookieValue = Cookies.get("emailCookie");
+  console.log(myCookieValue);
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`)
