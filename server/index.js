@@ -93,70 +93,75 @@ app.get("/api/movie/:id", async (req, res) => {
 });
 
 // login part
-app.post("/register", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
+app.post("/register", async (req, res) => {
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
 
-  con.query(
-    "INSERT INTO Users (email, first_name, last_name, password) VALUES(?, ?, ?, ?)",
-    [email, firstName, lastName, password],
-    (err, result) => {
-      if (result) {
-        res.send(result);
-      } else {
-        res.send({ message: "Error, enter the required fields" });
-      }
+    const email = req.body.email;
+    const password = req.body.password;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+
+    const query =
+      "INSERT INTO Users (email, first_name, last_name, password) VALUES(?, ?, ?, ?)";
+    const params = [email, firstName, lastName, password];
+    const [rows, fields] = await connection.execute(query, params);
+    res.send("Register complete");
+  } catch (err) {
+    res.send({ message: "Error during registration" });
+  }
+});
+
+app.get("/api/movie/:email", async (req, res) => {
+  const email = req.params.email;
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const [rows, fields] = await connection.query(
+      "SELECT * FROM Users WHERE email=?",
+      [id]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const query = "SELECT * FROM Users WHERE email=? and password =? ";
+    const params = [email, password];
+    const [rows, fields] = await connection.execute(query, params);
+
+    if (rows.length > 0) {
+      res.send(rows);
+    } else {
+      res.send({ message: "Wrong User name or password" });
     }
-  );
-});
-
-app.post("/login", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-
-  con.query(
-    "SELECT * FROM Users WHERE email=? and password =? ",
-    [email, password],
-    (err, result) => {
-      if (err) {
-        res.setEncoding({ err: err });
-      } else {
-        if (result.length > 0) {
-          res.send(result);
-          const token = jwt.sign(
-            {
-              userEmail: email,
-            },
-            "RANDOM-TOKEN",
-            { expiresIn: "24h" }
-          );
-        } else {
-          res.send({ message: "Wrong User name or password" });
-        }
-      }
-    }
-  );
-});
-
-// auth
-
-app.get("/auth-endpoint", auth, (request, response) => {
-  response.json({ message: "You are authorized to access me" });
-});
-
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  next();
+  } catch (err) {
+    res.send({ message: "Error logging in" });
+  }
 });
 
 app.listen(1234);

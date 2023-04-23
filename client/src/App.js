@@ -1,4 +1,3 @@
-/* eslint-disable react/style-prop-object */
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
@@ -7,7 +6,7 @@ import Movie from "./Movie";
 import Discover from "./Discover";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-// eslint-disable-next-line no-unused-vars
+import Login from "./Login";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
@@ -20,15 +19,8 @@ function App() {
       <Navbar></Navbar>
       <Routes>
         <Route path="/movie/:id" element={<Movie />} />
-        <Route
-          exact
-          path="/"
-          element={
-            <>
-              <Discover></Discover>
-            </>
-          }
-        />
+        <Route exact path="/" element={<Discover />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       <Footer></Footer>
     </>
