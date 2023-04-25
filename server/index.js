@@ -107,13 +107,34 @@ app.get("/api/:email", async (req, res) => {
       password: dotenv.parsed.DB_PASS,
       database: dotenv.parsed.DB_DB,
     });
-    console.log(email);
     const [rows, fields] = await connection.query(
       "SELECT * FROM Review WHERE email = ? ORDER BY review_date DESC",
       [email]
     );
-    console.log(rows);
     res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
+//Delete a review by a user
+app.delete("/api/review/delete", async (req, res) => {
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const params = [req.body.email, req.body.review_title, req.body.movie_id];
+    console.log(params);
+    const [rows, fields] = await connection.execute(
+      "DELETE FROM Review WHERE email = ? AND review_title = ? AND movie_id = ?",
+      params
+    );
+    res.status(200).send("Review Deleted successfully");
   } catch (err) {
     console.error(err);
     res.status(500).send("Error retrieving users from database");
