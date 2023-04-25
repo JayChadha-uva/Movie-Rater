@@ -97,6 +97,29 @@ app.get("/api/movie/:id", async (req, res) => {
   }
 });
 
+// all reviews for a user
+app.get("/api/:email", async (req, res) => {
+  const email = req.params.email;
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+    console.log(email);
+    const [rows, fields] = await connection.query(
+      "SELECT * FROM Review WHERE email = ? ORDER BY review_date DESC",
+      [email]
+    );
+    console.log(rows);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
 // Specify order by parameters
 app.get("/api/movie/:field/:order/:id", async (req, res) => {
   const field = req.params.field;

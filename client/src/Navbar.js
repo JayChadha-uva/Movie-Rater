@@ -75,8 +75,19 @@ function Navbar() {
             />
           </div>
           {loggedIn ? (
+            <a
+              class="nav-link"
+              style={{ color: "white", fontWeight: "bold" }}
+              href="/profile"
+            >
+              My Profile
+            </a>
+          ) : (
+            <></>
+          )}
+          {loggedIn ? (
             <button type="button" class="btn btn-light" onClick={handleLogOut}>
-              Logged in as {currentEmail}
+              Log out
             </button>
           ) : (
             <a
