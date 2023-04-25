@@ -7,6 +7,7 @@ class Create extends Component {
 
     this.state = {
       movieID: props.movieID,
+      email: props.email,
       rating: 0,
       reviewTitle: "",
       reviewText: "",
@@ -28,13 +29,14 @@ class Create extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const { movieID, rating, reviewTitle, reviewText } = this.state;
+    const { movieID, email, rating, reviewTitle, reviewText } = this.state;
 
     const sixHoursAgo = new Date();
     sixHoursAgo.setHours(sixHoursAgo.getHours() - 6);
 
     const book = {
       movieID,
+      email,
       rating,
       reviewTitle,
       reviewText,

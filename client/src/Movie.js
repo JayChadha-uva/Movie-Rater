@@ -15,6 +15,18 @@ function Movie() {
   const [similarMovies, setSimilarMovies] = useState([]);
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [watchProviders, setWatchProviders] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const currentEmail = sessionStorage.getItem("email");
+
+  useEffect(() => {
+    if (
+      sessionStorage.getItem("email") ||
+      sessionStorage.getItem("email") !== ""
+    ) {
+      setLoggedIn(true);
+    }
+  }, [sessionStorage.getItem("email")]);
 
   const img_URL = "https://image.tmdb.org/t/p/w500";
   const API_KEY = process.env.REACT_APP_TMDB_API;
@@ -334,7 +346,7 @@ function Movie() {
             <></>
           )}
         </div>
-        <Create movieID={id}></Create>
+        {loggedIn ? <Create movieID={id} email={currentEmail}></Create> : <></>}
         <br></br>
         <Review movieID={id}></Review>
       </div>

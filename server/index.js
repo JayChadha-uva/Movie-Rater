@@ -40,7 +40,7 @@ app.post("/create", async (req, res) => {
       req.body.reviewTitle,
       req.body.reviewText,
       req.body.date,
-      "ebarrett21@gmail.com", // TODO: change to be the user signed in
+      req.body.email,
     ];
 
     const [rows, fields] = await connection.execute(query, params);
