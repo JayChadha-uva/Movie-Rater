@@ -10,41 +10,25 @@ import "./selectSearch.css";
 
 function Navbar() {
   const API_KEY = process.env.REACT_APP_TMDB_API;
-
+  const [idVal, setIdVal] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  // const [user, setUser] = useState([]);
-  // const [profile, setProfile] = useState([]);
-  const [idVal, setIdVal] = useState(null);
+  useEffect(() => {
+    if (
+      sessionStorage.getItem("email") ||
+      sessionStorage.getItem("email") !== ""
+    ) {
+      setLoggedIn(true);
+    }
+  }, [sessionStorage.getItem("email")]);
 
-  // const login = useGoogleLogin({
-  //   onSuccess: (codeResponse) => setUser(codeResponse),
-  //   onError: (error) => console.log("Login Failed:", error),
-  // });
+  const handleLogOut = () => {
+    sessionStorage.setItem("email", "");
+    setLoggedIn(false);
+  };
 
-  // useEffect(() => {
-  //   if (user) {
-  //     axios
-  //       .get(
-  //         `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${user.access_token}`,
-  //             Accept: "application/json",
-  //           },
-  //         }
-  //       )
-  //       .then((res) => {
-  //         setProfile(res.data);
-  //       })
-  //       .catch((err) => console.log(err));
-  //   }
-  // }, [user]);
-
-  // const logOut = () => {
-  //   googleLogout();
-  //   setProfile(null);
-  // };
+  const currentEmail = sessionStorage.getItem("email");
 
   useEffect(() => {
     if (idVal != null) {
@@ -89,26 +73,20 @@ function Navbar() {
               onChange={setIdVal}
               placeholder="Search Movies"
             />
-            {/* <div class="ms-3">
-              {profile ? (
-                <div>
-                  <p>Name: {profile.name}</p>
-                  <p>Access- token: {user.access_token}</p>
-                  <button type="button" class="btn btn-light" onClick={logOut}>
-                    Log out
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  class="btn btn-light"
-                  onClick={() => login()}
-                >
-                  Sign in with Google
-                </button>
-              )}
-            </div> */}
           </div>
+          {loggedIn ? (
+            <button type="button" class="btn btn-light" onClick={handleLogOut}>
+              Logged in as {currentEmail}
+            </button>
+          ) : (
+            <a
+              class="nav-link"
+              style={{ color: "white", fontWeight: "bold" }}
+              href="/login"
+            >
+              Log in
+            </a>
+          )}
         </div>
       </nav>
     </>

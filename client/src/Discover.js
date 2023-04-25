@@ -36,7 +36,6 @@ function Discover() {
   return (
     <>
       <div class="container container-md height-requirement">
-        <p>Cookie value: {emailStorage}</p>
         <h2 class="mt-4 mb-3 nav-bold">Popular Movies</h2>
         <HorizontalMovies moviesList={popularMovies}></HorizontalMovies>
         <h2 class="mt-4 mb-3 nav-bold">Trending Movies Today</h2>

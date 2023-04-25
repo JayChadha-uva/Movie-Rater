@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [firstName, setFirstName] = useState("");
@@ -8,6 +9,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
   const [registerStatus, setRegisterStatus] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -20,6 +22,7 @@ function Login() {
         setLoginStatus(response.data.message);
         setEmail("");
         setPassword("");
+        navigate(`/`);
       } else {
         setLoginStatus(response.data.message);
         setFirstName("");
