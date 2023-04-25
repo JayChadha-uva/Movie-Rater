@@ -54,11 +54,11 @@ function Login() {
 
   return (
     <div className="container  height-requirement">
-      <div className="row justify-content-center align-items-center">
-        <div className="col-md-6 col-lg-4">
+      <div className="row justify-content-center align-items-center mt-5 mb-5">
+        <div className="col-md-6 ">
           <form onSubmit={handleLogin}>
-            <h4>Login Here</h4>
-            <div className="mb-3">
+            <h4>Login</h4>
+            <div className="mb-2 mt-3">
               <label htmlFor="email" className="form-label">
                 Email*
               </label>
@@ -71,7 +71,7 @@ function Login() {
                 required
               />
             </div>
-            <div className="mb-3">
+            <div className="mb-2">
               <label htmlFor="password" className="form-label">
                 Password*
               </label>
@@ -84,7 +84,7 @@ function Login() {
                 required
               />
             </div>
-            <div className="mb-3">
+            <div className="mt-3">
               <button type="submit" className="btn btn-primary">
                 Login
               </button>
@@ -103,10 +103,10 @@ function Login() {
         </div>
       </div>
       <div className="row justify-content-center align-items-center">
-        <div className="col-md-6 col-lg-4">
+        <div className="col-md-6">
           <form onSubmit={handleRegister}>
             <h4>Register Here</h4>
-            <div className="mb-3">
+            <div className="mb-2 mt-3">
               <label htmlFor="email" className="form-label">
                 Email Address*
               </label>
@@ -119,7 +119,7 @@ function Login() {
                 required
               />
             </div>
-            <div className="mb-3">
+            <div className="mb-2">
               <label htmlFor="username" className="form-label">
                 First Name*
               </label>
@@ -132,7 +132,7 @@ function Login() {
                 required
               />
             </div>
-            <div className="mb-3">
+            <div className="mb-2">
               <label htmlFor="lastName" className="form-label">
                 Last Name*
               </label>
@@ -145,7 +145,7 @@ function Login() {
                 required
               />
             </div>
-            <div className="mb-3">
+            <div className="mb-2">
               <label htmlFor="password" className="form-label">
                 Password*
               </label>
@@ -158,7 +158,7 @@ function Login() {
                 required
               />
             </div>
-            <div className="mb-3">
+            <div className="mb-2">
               <button type="submit" className="btn btn-primary">
                 Create an account
               </button>
