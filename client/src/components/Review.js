@@ -7,6 +7,7 @@ class Review extends Component {
     this.state = {
       movieID: props.movieID,
       reviews: [],
+      averageReview: [],
       sort: "review_date",
       sortOrder: "DESC",
     };
@@ -16,6 +17,12 @@ class Review extends Component {
     fetch(`/api/movie/${this.state.movieID}`).then((res) =>
       res.json().then((reviews) => {
         this.setState({ reviews: reviews });
+      })
+    );
+
+    fetch(`/api/averageReview/${this.state.movieID}`).then((res) =>
+      res.json().then((avgReview) => {
+        this.setState({ averageReview: avgReview });
       })
     );
   }
@@ -39,6 +46,18 @@ class Review extends Component {
     return (
       <div class="mt-3">
         <h3 class="nav-bold">Reviews</h3>
+        {this.state.averageReview.map((avgReview) => (
+          <h5 class="mb-3">
+            {avgReview.avgRating != null ? (
+              <>
+                Average User Ratings: <i class="bi bi-star-fill star-color"></i>{" "}
+                {avgReview.avgRating}
+              </>
+            ) : (
+              <>No Reviews</>
+            )}
+          </h5>
+        ))}
 
         <div class="btn-group mb-3">
           <button
