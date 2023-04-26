@@ -29,6 +29,29 @@ class Genre extends Component {
     }
   }
 
+  handleDelete(email, genre_idInp) {
+    const genre_id = parseInt(genre_idInp);
+    console.log(genre_id);
+
+    const deleteGenre = {
+      email,
+      genre_id,
+    };
+
+    axios
+      .delete("http://localhost:1234/api/genre/favorite/delete", {
+        data: deleteGenre,
+      })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  }
+
   handleFavorite(email, genre_idInp) {
     const genre_id = parseInt(genre_idInp);
     console.log(genre_id);
@@ -73,7 +96,15 @@ class Genre extends Component {
                       Favorite
                     </button>
                   ) : (
-                    <></>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger"
+                      onClick={() =>
+                        this.handleDelete(this.state.email, genre.genre_id)
+                      }
+                    >
+                      Delete
+                    </button>
                   )}
                 </div>
               </div>

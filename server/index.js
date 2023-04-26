@@ -74,6 +74,29 @@ app.post("/api/genre/favorite", async (req, res) => {
   }
 });
 
+//Delete a genre by a user
+app.delete("/api/genre/favorite/delete", async (req, res) => {
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const params = [req.body.email, req.body.genre_id];
+    console.log(params);
+    const [rows, fields] = await connection.execute(
+      "DELETE FROM prefers WHERE email = ? AND genre_id = ?",
+      params
+    );
+    res.status(200).send("Review Deleted successfully");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
 // get favorite genres
 app.get("/api/genre/favorite/:email", async (req, res) => {
   const email = req.params.email;
