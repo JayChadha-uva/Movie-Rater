@@ -52,6 +52,50 @@ app.post("/create", async (req, res) => {
   }
 });
 
+// favorite a genre for a user
+app.post("/api/genre/favorite", async (req, res) => {
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const query = "INSERT INTO prefers (email, genre_id) VALUES (?, ?)";
+    const params = [req.body.email, req.body.genre_id];
+
+    const [rows, fields] = await connection.execute(query, params);
+
+    res.status(200).send("Genre favorited");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error creating review");
+  }
+});
+
+// get favorite genres
+app.get("/api/genre/favorite/:email", async (req, res) => {
+  const email = req.params.email;
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const [rows, fields] = await connection.query(
+      "SELECT * FROM Genre NATURAL JOIN prefers WHERE email = ?",
+      [email]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
 // add movie to DB
 app.post("/insert/movie", async (req, res) => {
   try {

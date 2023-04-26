@@ -26,6 +26,9 @@ function Navbar() {
   const handleLogOut = () => {
     sessionStorage.setItem("email", "");
     setLoggedIn(false);
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
 
   const currentEmail = sessionStorage.getItem("email");

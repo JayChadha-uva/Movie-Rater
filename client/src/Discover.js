@@ -12,6 +12,19 @@ function Discover() {
   var emailStorage = sessionStorage.getItem("email");
   console.log(emailStorage);
 
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (
+      sessionStorage.getItem("email") ||
+      sessionStorage.getItem("email") !== ""
+    ) {
+      setLoggedIn(true);
+    }
+  }, [sessionStorage.getItem("email")]);
+
+  const currentEmail = sessionStorage.getItem("email");
+
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`)
       .then((response) => response.json())
@@ -42,8 +55,10 @@ function Discover() {
         <h2 class="mt-4 mb-3 nav-bold">Trending Movies Today</h2>
         <HorizontalMovies moviesList={trendingMovies}></HorizontalMovies>
         <div class="mb-5 "></div>
-        <h2 class="mt-4 mb-3 nav-bold">Genres</h2>
-        <Genre />
+        {loggedIn ? <h2 class="mt-4 mb-3 nav-bold">Favorite Genres</h2> : <></>}
+        {loggedIn ? <Genre email={currentEmail} favorite={"true"} /> : <></>}
+        {loggedIn ? <h2 class="mt-5 mb-3 nav-bold">All Genres</h2> : <></>}
+        {loggedIn ? <Genre email={currentEmail} favorite={"false"} /> : <></>}
       </div>
     </>
   );
