@@ -9,6 +9,7 @@ import Footer from "./Footer";
 import Login from "./Login";
 import Profile from "./Profile.js";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import GenrePage from "./GenrePage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/movie/:id" element={<Movie />} />
         <Route exact path="/" element={<Discover />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/genre/:genreID/:genreName" element={<GenrePage />} />
       </Routes>
       <Footer></Footer>
     </>

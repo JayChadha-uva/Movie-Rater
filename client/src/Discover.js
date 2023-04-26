@@ -2,6 +2,7 @@ import "./App.css";
 
 import React, { useEffect, useState } from "react";
 import HorizontalMovies from "./HorizontalMovies";
+import Genre from "./components/Genre";
 
 function Discover() {
   const [trendingMovies, setTrendingMovies] = useState([]);
@@ -41,6 +42,8 @@ function Discover() {
         <h2 class="mt-4 mb-3 nav-bold">Trending Movies Today</h2>
         <HorizontalMovies moviesList={trendingMovies}></HorizontalMovies>
         <div class="mb-5 "></div>
+        <h2 class="mt-4 mb-3 nav-bold">Genres</h2>
+        <Genre />
       </div>
     </>
   );
