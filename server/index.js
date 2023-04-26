@@ -116,6 +116,28 @@ app.get("/api/genres", async (req, res) => {
   }
 });
 
+// Define routes
+app.get("/api/genres/movies", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const [rows, fields] = await connection.query(
+      "SELECT * FROM Movie NATURAL JOIN has WHERE genre_id=:genre_to_filter",
+      [id]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
 // all reviews for a user
 app.get("/api/:email", async (req, res) => {
   const email = req.params.email;
