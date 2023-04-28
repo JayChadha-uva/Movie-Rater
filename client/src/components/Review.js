@@ -19,20 +19,13 @@ class Review extends Component {
   }
 
   componentDidMount() {
-    if (this.state.email !== "") {
-      fetch(`/api/movie/${this.state.movieID}/${this.state.email}`).then(
-        (res) =>
-          res.json().then((reviews) => {
-            this.setState({ reviews: reviews });
-          })
-      );
-    } else {
-      fetch(`/api/movie/${this.state.movieID}`).then((res) =>
-        res.json().then((reviews) => {
-          this.setState({ reviews: reviews });
-        })
-      );
-    }
+    fetch(
+      `/api/movie/${this.state.movieID}/${this.state.email}/${this.state.sort}/${this.state.sortOrder}`
+    ).then((res) =>
+      res.json().then((reviews) => {
+        this.setState({ reviews: reviews });
+      })
+    );
 
     fetch(`/api/averageReview/${this.state.movieID}`).then((res) =>
       res.json().then((avgReview) => {

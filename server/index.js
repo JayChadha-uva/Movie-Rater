@@ -5,6 +5,18 @@ const auth = require("./auth");
 const mysql = require("mysql2/promise");
 const cors = require("cors");
 
+const pool = mysql.createPool({
+  host: dotenv.parsed.DB_HOST,
+  user: dotenv.parsed.DB_USER,
+  database: dotenv.parsed.DB_DB,
+  password: dotenv.parsed.DB_PASS,
+  waitForConnections: true,
+  connectionLimit: 1,
+  maxIdle: 1, // max idle connections, the default value is the same as `connectionLimit`
+  idleTimeout: 60000, // idle connections timeout, in milliseconds, the default value 60000
+  queueLimit: 0,
+});
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -25,13 +37,6 @@ app.use(express.urlencoded({ extended: false }));
 
 app.post("/create", async (req, res) => {
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
     const query =
       "INSERT INTO Review (movie_id, rating, review_title, review_text, review_date, email) VALUES (?, ?, ?, ?, ?, ?)";
     const params = [
@@ -43,7 +48,7 @@ app.post("/create", async (req, res) => {
       req.body.email,
     ];
 
-    const [rows, fields] = await connection.execute(query, params);
+    const [rows, fields] = await pool.execute(query, params);
 
     res.status(200).send("Review created successfully");
   } catch (err) {
@@ -55,17 +60,10 @@ app.post("/create", async (req, res) => {
 // favorite a genre for a user
 app.post("/api/genre/favorite", async (req, res) => {
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
     const query = "INSERT INTO prefers (email, genre_id) VALUES (?, ?)";
     const params = [req.body.email, req.body.genre_id];
 
-    const [rows, fields] = await connection.execute(query, params);
+    const [rows, fields] = await pool.execute(query, params);
 
     res.status(200).send("Genre favorited");
   } catch (err) {
@@ -77,16 +75,9 @@ app.post("/api/genre/favorite", async (req, res) => {
 //Delete a genre by a user
 app.delete("/api/genre/favorite/delete", async (req, res) => {
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
     const params = [req.body.email, req.body.genre_id];
     console.log(params);
-    const [rows, fields] = await connection.execute(
+    const [rows, fields] = await pool.execute(
       "DELETE FROM prefers WHERE email = ? AND genre_id = ?",
       params
     );
@@ -101,14 +92,7 @@ app.delete("/api/genre/favorite/delete", async (req, res) => {
 app.get("/api/genre/favorite/:email", async (req, res) => {
   const email = req.params.email;
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
-    const [rows, fields] = await connection.query(
+    const [rows, fields] = await pool.query(
       "SELECT * FROM Genre NATURAL JOIN prefers WHERE email = ?",
       [email]
     );
@@ -122,13 +106,6 @@ app.get("/api/genre/favorite/:email", async (req, res) => {
 // add movie to DB
 app.post("/insert/movie", async (req, res) => {
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
     const query =
       "INSERT INTO Movie (movie_id, title, image_url) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE movie_id=?";
     const params = [
@@ -138,7 +115,7 @@ app.post("/insert/movie", async (req, res) => {
       req.body.movieID,
     ];
 
-    const [rows, fields] = await connection.execute(query, params);
+    const [rows, fields] = await pool.execute(query, params);
 
     res.status(200).send("Review created successfully");
   } catch (err) {
@@ -148,67 +125,15 @@ app.post("/insert/movie", async (req, res) => {
 });
 
 // Define routes
-app.get("/api/movie/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
-    const [rows, fields] = await connection.query(
-      "SELECT * FROM Review WHERE movie_id = ? ORDER BY review_date DESC",
-      [id]
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error retrieving users from database");
-  }
-});
-
-app.get("/api/movie/:id/:email", async (req, res) => {
-  const id = req.params.id;
-  const email = req.params.email;
-  try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
-    const params = [email, id];
-
-    const [rows, fields] = await connection.query(
-      "SELECT * FROM (SELECT * FROM rates WHERE email = ?) AS user_rating RIGHT JOIN (SELECT * FROM Review WHERE movie_id = ?) AS R ON R.review_id = user_rating.review_id ORDER BY R.review_date DESC",
-      params
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error retrieving users from database");
-  }
-});
-
 app.get("/api/movie/:id/:email/:field/:order", async (req, res) => {
   const id = req.params.id;
   const email = req.params.email;
   const field = req.params.field;
   const order = req.params.order;
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
     const params = [email, id, field, order];
 
-    const [rows, fields] = await connection.query(
+    const [rows, fields] = await pool.query(
       "SELECT * FROM (SELECT * FROM rates WHERE email = ?) AS user_rating RIGHT JOIN (SELECT * FROM Review WHERE movie_id = ?) AS R ON R.review_id = user_rating.review_id ORDER BY R." +
         field +
         " " +
@@ -226,14 +151,7 @@ app.get("/api/movie/:id/:email/:field/:order", async (req, res) => {
 app.get("/api/averageReview/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
-    const [rows, fields] = await connection.query(
+    const [rows, fields] = await pool.query(
       "SELECT AVG(rating) as avgRating FROM Review WHERE movie_id = ?",
       [id]
     );
@@ -248,14 +166,7 @@ app.get("/api/averageReview/:id", async (req, res) => {
 app.get("/api/genres", async (req, res) => {
   const id = req.params.id;
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
-    const [rows, fields] = await connection.query("SELECT * FROM Genre", [id]);
+    const [rows, fields] = await pool.query("SELECT * FROM Genre", [id]);
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -267,14 +178,7 @@ app.get("/api/genres", async (req, res) => {
 app.get("/api/genres/movies", async (req, res) => {
   const id = req.params.id;
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
-    const [rows, fields] = await connection.query(
+    const [rows, fields] = await pool.query(
       "SELECT * FROM Movie NATURAL JOIN has WHERE genre_id=:genre_to_filter",
       [id]
     );
@@ -289,13 +193,7 @@ app.get("/api/genres/movies", async (req, res) => {
 app.get("/api/:email", async (req, res) => {
   const email = req.params.email;
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-    const [rows, fields] = await connection.query(
+    const [rows, fields] = await pool.query(
       "SELECT * FROM Review WHERE email = ? ORDER BY review_date DESC",
       [email]
     );
@@ -309,16 +207,9 @@ app.get("/api/:email", async (req, res) => {
 //Delete a review by a user
 app.delete("/api/review/delete", async (req, res) => {
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
     const params = [req.body.email, req.body.review_title, req.body.movie_id];
     console.log(params);
-    const [rows, fields] = await connection.execute(
+    const [rows, fields] = await pool.execute(
       "DELETE FROM Review WHERE email = ? AND review_title = ? AND movie_id = ?",
       params
     );
@@ -331,13 +222,6 @@ app.delete("/api/review/delete", async (req, res) => {
 
 app.post("/api/review/rate", async (req, res) => {
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
     const query =
       "INSERT INTO rates (email, review_id, is_like) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE is_like = ?";
     const params = [
@@ -347,7 +231,7 @@ app.post("/api/review/rate", async (req, res) => {
       req.body.rateReview.is_like,
     ];
     // console.log(params);
-    const [rows, fields] = await connection.execute(query, params);
+    const [rows, fields] = await pool.execute(query, params);
 
     res.status(200).send("Review Rated successfully");
   } catch (err) {
@@ -358,17 +242,10 @@ app.post("/api/review/rate", async (req, res) => {
 
 app.delete("/api/review/rate/delete", async (req, res) => {
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
     const query = "DELETE FROM rates WHERE email = ? AND review_id = ?";
     const params = [req.body.email, req.body.review_id];
 
-    const [rows, fields] = await connection.execute(query, params);
+    const [rows, fields] = await pool.execute(query, params);
 
     res.status(200).send("Review Rated successfully");
   } catch (err) {
@@ -380,13 +257,6 @@ app.delete("/api/review/rate/delete", async (req, res) => {
 // login part
 app.post("/register", async (req, res) => {
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
     const email = req.body.email;
     const password = req.body.password;
     const firstName = req.body.firstName;
@@ -395,7 +265,7 @@ app.post("/register", async (req, res) => {
     const query =
       "INSERT INTO Users (email, first_name, last_name, password) VALUES(?, ?, ?, ?)";
     const params = [email, firstName, lastName, password];
-    const [rows, fields] = await connection.execute(query, params);
+    const [rows, fields] = await pool.execute(query, params);
     res.send("Register complete");
   } catch (err) {
     res.send({ message: "Error during registration" });
@@ -404,19 +274,12 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-    const connection = await mysql.createConnection({
-      host: dotenv.parsed.DB_HOST,
-      user: dotenv.parsed.DB_USER,
-      password: dotenv.parsed.DB_PASS,
-      database: dotenv.parsed.DB_DB,
-    });
-
     const email = req.body.email;
     const password = req.body.password;
 
     const query = "SELECT * FROM Users WHERE email=? and password =? ";
     const params = [email, password];
-    const [rows, fields] = await connection.execute(query, params);
+    const [rows, fields] = await pool.execute(query, params);
 
     if (rows.length > 0) {
       console.log("Setting cookie:", rows[0].email);
