@@ -82,12 +82,14 @@ function Movie() {
       imgURL: movie.poster_path,
     };
 
-    axios
-      .post("http://localhost:1234/insert/movie", movieSubmit)
-      .then(() => {})
-      .catch((err) => {
-        console.error(err);
-      });
+    if (movie.title !== undefined) {
+      axios
+        .post("http://localhost:1234/insert/movie", movieSubmit)
+        .then(() => {})
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   }, [movie.title]);
 
   return (
@@ -348,7 +350,7 @@ function Movie() {
         </div>
         {loggedIn ? <Create movieID={id} email={currentEmail}></Create> : <></>}
         <br></br>
-        <Review movieID={id}></Review>
+        <Review movieID={id} email={currentEmail}></Review>
       </div>
     </>
   );

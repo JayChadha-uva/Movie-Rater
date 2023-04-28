@@ -130,8 +130,13 @@ app.post("/insert/movie", async (req, res) => {
     });
 
     const query =
-      "INSERT INTO Movie (movie_id, title, image_url) VALUES (?, ?, ?)";
-    const params = [req.body.movieID, req.body.title, req.body.imgURL];
+      "INSERT INTO Movie (movie_id, title, image_url) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE movie_id=?";
+    const params = [
+      req.body.movieID,
+      req.body.title,
+      req.body.imgURL,
+      req.body.movieID,
+    ];
 
     const [rows, fields] = await connection.execute(query, params);
 
@@ -156,6 +161,59 @@ app.get("/api/movie/:id", async (req, res) => {
     const [rows, fields] = await connection.query(
       "SELECT * FROM Review WHERE movie_id = ? ORDER BY review_date DESC",
       [id]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
+app.get("/api/movie/:id/:email", async (req, res) => {
+  const id = req.params.id;
+  const email = req.params.email;
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const params = [email, id];
+
+    const [rows, fields] = await connection.query(
+      "SELECT * FROM (SELECT * FROM rates WHERE email = ?) AS user_rating RIGHT JOIN (SELECT * FROM Review WHERE movie_id = ?) AS R ON R.review_id = user_rating.review_id ORDER BY R.review_date DESC",
+      params
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
+app.get("/api/movie/:id/:email/:field/:order", async (req, res) => {
+  const id = req.params.id;
+  const email = req.params.email;
+  const field = req.params.field;
+  const order = req.params.order;
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const params = [email, id, field, order];
+
+    const [rows, fields] = await connection.query(
+      "SELECT * FROM (SELECT * FROM rates WHERE email = ?) AS user_rating RIGHT JOIN (SELECT * FROM Review WHERE movie_id = ?) AS R ON R.review_id = user_rating.review_id ORDER BY R." +
+        field +
+        " " +
+        order,
+      params
     );
     res.json(rows);
   } catch (err) {
@@ -271,11 +329,7 @@ app.delete("/api/review/delete", async (req, res) => {
   }
 });
 
-// Specify order by parameters
-app.get("/api/movie/:field/:order/:id", async (req, res) => {
-  const field = req.params.field;
-  const order = req.params.order;
-  const id = req.params.id;
+app.post("/api/review/rate", async (req, res) => {
   try {
     const connection = await mysql.createConnection({
       host: dotenv.parsed.DB_HOST,
@@ -285,12 +339,38 @@ app.get("/api/movie/:field/:order/:id", async (req, res) => {
     });
 
     const query =
-      "SELECT * FROM Review WHERE movie_id = ? ORDER BY " + field + " " + order;
-    const params = [id];
+      "INSERT INTO rates (email, review_id, is_like) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE is_like = ?";
+    const params = [
+      req.body.rateReview.email,
+      req.body.rateReview.review_id,
+      req.body.rateReview.is_like,
+      req.body.rateReview.is_like,
+    ];
+    // console.log(params);
+    const [rows, fields] = await connection.execute(query, params);
 
-    const [rows, fields] = await connection.query(query, params);
+    res.status(200).send("Review Rated successfully");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
 
-    res.json(rows);
+app.delete("/api/review/rate/delete", async (req, res) => {
+  try {
+    const connection = await mysql.createConnection({
+      host: dotenv.parsed.DB_HOST,
+      user: dotenv.parsed.DB_USER,
+      password: dotenv.parsed.DB_PASS,
+      database: dotenv.parsed.DB_DB,
+    });
+
+    const query = "DELETE FROM rates WHERE email = ? AND review_id = ?";
+    const params = [req.body.email, req.body.review_id];
+
+    const [rows, fields] = await connection.execute(query, params);
+
+    res.status(200).send("Review Rated successfully");
   } catch (err) {
     console.error(err);
     res.status(500).send("Error retrieving users from database");

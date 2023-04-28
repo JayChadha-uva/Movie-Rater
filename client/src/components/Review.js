@@ -1,5 +1,6 @@
 import { Component } from "react";
 import React from "react";
+import axios from "axios";
 
 class Review extends Component {
   constructor(props) {
@@ -10,15 +11,28 @@ class Review extends Component {
       averageReview: [],
       sort: "review_date",
       sortOrder: "DESC",
+      email: props.email,
     };
+
+    this.handleRate = this.handleRate.bind(this);
+    this.handleDeleteRate = this.handleDeleteRate.bind(this);
   }
 
   componentDidMount() {
-    fetch(`/api/movie/${this.state.movieID}`).then((res) =>
-      res.json().then((reviews) => {
-        this.setState({ reviews: reviews });
-      })
-    );
+    if (this.state.email !== "") {
+      fetch(`/api/movie/${this.state.movieID}/${this.state.email}`).then(
+        (res) =>
+          res.json().then((reviews) => {
+            this.setState({ reviews: reviews });
+          })
+      );
+    } else {
+      fetch(`/api/movie/${this.state.movieID}`).then((res) =>
+        res.json().then((reviews) => {
+          this.setState({ reviews: reviews });
+        })
+      );
+    }
 
     fetch(`/api/averageReview/${this.state.movieID}`).then((res) =>
       res.json().then((avgReview) => {
@@ -33,13 +47,56 @@ class Review extends Component {
       this.state.sortOrder !== prevState.sortOrder
     ) {
       fetch(
-        `/api/movie/${this.state.sort}/${this.state.sortOrder}/${this.state.movieID}`
+        `/api/movie/${this.state.movieID}/${this.state.email}/${this.state.sort}/${this.state.sortOrder}`
       ).then((res) =>
         res.json().then((reviews) => {
           this.setState({ reviews: reviews });
         })
       );
     }
+  }
+
+  handleRate(email, review_id, is_like) {
+    if (email === "") {
+      window.location.href = "/login";
+    }
+
+    const rateReview = {
+      email,
+      review_id: parseInt(review_id),
+      is_like: parseInt(is_like),
+    };
+    console.log("Rate 1");
+    axios
+      .post("http://localhost:1234/api/review/rate", { rateReview })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  }
+
+  handleDeleteRate(email, review_id) {
+    const deleteRate = {
+      email,
+      review_id: parseInt(review_id),
+    };
+
+    axios
+      .delete("http://localhost:1234/api/review/rate/delete", {
+        data: deleteRate,
+      })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   }
 
   render() {
@@ -128,6 +185,53 @@ class Review extends Component {
               </h6>
 
               <p class="card-text">{review.review_text}</p>
+
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-1">
+                    {review.is_like === 1 ? (
+                      <i
+                        class={"bi bi-hand-thumbs-up-fill"}
+                        onClick={() =>
+                          this.handleDeleteRate(
+                            this.state.email,
+                            review.review_id
+                          )
+                        }
+                      />
+                    ) : (
+                      <i
+                        class={"bi bi-hand-thumbs-up"}
+                        onClick={() =>
+                          this.handleRate(this.state.email, review.review_id, 1)
+                        }
+                      />
+                    )}
+                    <span>{review.likes}</span>
+                  </div>
+                  <div class="col-sm-1">
+                    {review.is_like === 0 ? (
+                      <i
+                        class={"bi bi-hand-thumbs-down-fill"}
+                        onClick={() =>
+                          this.handleDeleteRate(
+                            this.state.email,
+                            review.review_id
+                          )
+                        }
+                      />
+                    ) : (
+                      <i
+                        class={"bi bi-hand-thumbs-down"}
+                        onClick={() =>
+                          this.handleRate(this.state.email, review.review_id, 0)
+                        }
+                      />
+                    )}
+                    <span>{review.dislikes}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         ))}
