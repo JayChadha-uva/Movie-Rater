@@ -13,7 +13,7 @@ function Profile() {
 
   useEffect(() => {
     if (
-      sessionStorage.getItem("email") ||
+      sessionStorage.getItem("email") &&
       sessionStorage.getItem("email") !== ""
     ) {
       setLoggedIn(true);

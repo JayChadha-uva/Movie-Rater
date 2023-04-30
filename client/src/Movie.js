@@ -23,7 +23,7 @@ function Movie() {
 
   useEffect(() => {
     if (
-      sessionStorage.getItem("email") ||
+      sessionStorage.getItem("email") &&
       sessionStorage.getItem("email") !== ""
     ) {
       setLoggedIn(true);
