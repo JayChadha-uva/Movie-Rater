@@ -9,7 +9,7 @@ function HorizontalMovies({ moviesList }) {
           {moviesList &&
             moviesList.length > 0 &&
             moviesList.map((movie, index) => (
-              <div class="col me-3 px-0">
+              <div class="col me-3 px-0" key={index}>
                 <div
                   class="card mb-3  movie-card-custom rounded-3"
                   key={movie.id}

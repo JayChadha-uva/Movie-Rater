@@ -63,8 +63,8 @@ class Track extends Component {
   render() {
     return (
       <>
-        {this.state.tracks.map((track) => (
-          <div class="card mb-3 rounded-4 border-0">
+        {this.state.tracks.map((track, index) => (
+          <div class="card mb-3 rounded-4 border-0" key={index}>
             <div class="card-body">
               <div className="d-flex justify-content-between">
                 <h5 class="card-title">{track.title}</h5>

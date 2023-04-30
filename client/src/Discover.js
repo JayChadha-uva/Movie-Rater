@@ -10,7 +10,7 @@ function Discover() {
 
   const API_KEY = process.env.REACT_APP_TMDB_API;
   var emailStorage = sessionStorage.getItem("email");
-  console.log(emailStorage);
+  // console.log(emailStorage);
 
   const [loggedIn, setLoggedIn] = useState(false);
 

@@ -59,7 +59,7 @@ class Review extends Component {
       review_id: parseInt(review_id),
       is_like: parseInt(is_like),
     };
-    console.log("Rate 1");
+
     axios
       .post("http://localhost:1234/api/review/rate", { rateReview })
       .then(() => {})

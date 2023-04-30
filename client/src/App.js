@@ -14,10 +14,6 @@ import GenrePage from "./GenrePage";
 function App() {
   return (
     <>
-      <head>
-        <meta name="theme-color" content="#576f72" />
-      </head>
-
       <Navbar></Navbar>
       <Routes>
         <Route path="/profile" element={<Profile />} />

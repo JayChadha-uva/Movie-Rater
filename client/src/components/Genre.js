@@ -31,7 +31,7 @@ class Genre extends Component {
 
   handleDelete(email, genre_idInp) {
     const genre_id = parseInt(genre_idInp);
-    console.log(genre_id);
+    // console.log(genre_id);
 
     const deleteGenre = {
       email,
@@ -54,7 +54,7 @@ class Genre extends Component {
 
   handleFavorite(email, genre_idInp) {
     const genre_id = parseInt(genre_idInp);
-    console.log(genre_id);
+    // console.log(genre_id);
     const deleteReview = {
       email,
       genre_id,
@@ -73,8 +73,8 @@ class Genre extends Component {
   render() {
     return (
       <div class="mt-3 row">
-        {this.state.genres.map((genre) => (
-          <div class="col me-3 mb-3">
+        {this.state.genres.map((genre, index) => (
+          <div class="col me-3 mb-3" key={index}>
             <div class="card" style={{ width: "18rem" }}>
               <div class="card-body">
                 <h5 class="card-title">{genre.genre_name} Movies</h5>

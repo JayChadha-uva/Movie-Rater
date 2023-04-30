@@ -23,7 +23,7 @@ class ProfileReviews extends Component {
 
   handleDelete(email, review_title, movieIDInput) {
     const movieID = parseInt(movieIDInput);
-    console.log(movieID);
+    // console.log(movieID);
 
     const deleteReview = {
       email,
@@ -46,8 +46,8 @@ class ProfileReviews extends Component {
   render() {
     return (
       <>
-        {this.state.reviews.map((review) => (
-          <div class="card mb-3 rounded-4 border-0">
+        {this.state.reviews.map((review, index) => (
+          <div class="card mb-3 rounded-4 border-0" key={index}>
             <div class="card-body">
               <div className="d-flex justify-content-between">
                 <h5 class="card-title">

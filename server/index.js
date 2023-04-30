@@ -76,7 +76,7 @@ app.post("/api/genre/favorite", async (req, res) => {
 app.delete("/api/genre/favorite/delete", async (req, res) => {
   try {
     const params = [req.body.email, req.body.genre_id];
-    console.log(params);
+    // console.log(params);
     const [rows, fields] = await pool.execute(
       "DELETE FROM prefers WHERE email = ? AND genre_id = ?",
       params
@@ -253,7 +253,7 @@ app.get("/api/:email", async (req, res) => {
 app.delete("/api/review/delete", async (req, res) => {
   try {
     const params = [req.body.email, req.body.review_title, req.body.movie_id];
-    console.log(params);
+    // console.log(params);
     const [rows, fields] = await pool.execute(
       "DELETE FROM Review WHERE email = ? AND review_title = ? AND movie_id = ?",
       params
