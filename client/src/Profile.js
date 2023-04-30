@@ -10,6 +10,8 @@ function Profile() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [profileEmail, setProfileEmail] = useState();
   const [profileName, setProfileName] = useState();
+  const [following, setFollowing] = useState("Follow");
+  const [toggleFollowing, setToggleFollowing] = useState(false);
 
   useEffect(() => {
     if (
@@ -29,6 +31,8 @@ function Profile() {
         window.location.href = "/login";
       }
       setProfileEmail(currentEmail);
+    } else if (email === currentEmail) {
+      window.location.href = "/profile";
     } else {
       Axios.post("http://localhost:1234/api/user/get", {
         email: email,
@@ -43,11 +47,68 @@ function Profile() {
     }
   }, []);
 
+  useEffect(() => {
+    if (currentEmail !== "" && currentEmail !== undefined) {
+      Axios.post("http://localhost:1234/api/user/get/follow", {
+        email: email,
+        f_email: currentEmail,
+      }).then((response) => {
+        setFollowing(response.data.length > 0 ? "Unfollow" : "Follow");
+      });
+    }
+  }, [toggleFollowing, loggedIn]);
+
+  const handleFollow = () => {
+    const followUser = {
+      email: email,
+      f_email: currentEmail,
+    };
+
+    Axios.post("http://localhost:1234/api/user/follow", { followUser })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+
+    setToggleFollowing(!toggleFollowing);
+  };
+
+  const handleUnfollow = () => {
+    console.log(email + " " + currentEmail);
+    const unfollowUser = {
+      email: email,
+      f_email: currentEmail,
+    };
+
+    Axios.delete("http://localhost:1234/api/user/unfollow", {
+      data: unfollowUser,
+    })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+
+    setToggleFollowing(!toggleFollowing);
+  };
+
   return (
     <div key={profileEmail} className="container-md height-requirement">
-      <h2 class="mt-4 mb-3 nav-bold">
-        {profileName ? profileName + "'s" : "My"} Reviews
-      </h2>
+      {profileName ? (
+        <div style={{ display: "flex", columnGap: "1em" }}>
+          <h2 class="mt-4 mb-3 nav-bold">{profileName + "'s"} Reviews</h2>
+          <button
+            class="mt-4 mb-3 btn btn-secondary"
+            type="button"
+            onClick={() => {
+              following === "Unfollow" ? handleUnfollow() : handleFollow();
+            }}
+          >
+            {following}
+          </button>
+        </div>
+      ) : (
+        <h2 class="mt-4 mb-3 nav-bold">My Reviews</h2>
+      )}
       {loggedIn ? <ProfileReviews email={profileEmail} /> : <></>}
       <h2 class="mt-4 mb-3 nav-bold">Favorite Genres</h2>
       {loggedIn ? <Genre email={profileEmail} favorite={"true"} /> : <></>}

@@ -265,6 +265,34 @@ app.delete("/api/track/delete", async (req, res) => {
   }
 });
 
+// Follows a user
+app.post("/api/user/follow", async (req, res) => {
+  try {
+    const query = "INSERT INTO follows (email, f_email) VALUES (?, ?)";
+    const params = [req.body.followUser.email, req.body.followUser.f_email];
+
+    const [rows, fields] = await pool.execute(query, params);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
+// Unfollows a user
+app.delete("/api/user/unfollow", async (req, res) => {
+  try {
+    const query = "DELETE FROM follows WHERE email=? AND f_email=?";
+    const params = [req.body.email, req.body.f_email];
+
+    const [rows, fields] = await pool.execute(query, params);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
 // all reviews for a user
 app.get("/api/:email", async (req, res) => {
   const email = req.params.email;
@@ -287,6 +315,21 @@ app.post("/api/user/get", async (req, res) => {
 
     const query = "SELECT first_name, last_name FROM Users WHERE email=?";
     const params = [email];
+    const [rows, fields] = await pool.execute(query, params);
+    res.send(rows);
+  } catch (err) {
+    res.send({ message: "Error during registration" });
+  }
+});
+
+// Get if user is following a user
+app.post("/api/user/get/follow", async (req, res) => {
+  try {
+    const email = req.body.email;
+    const f_email = req.body.f_email;
+
+    const query = "SELECT * FROM follows WHERE email=? AND f_email=?";
+    const params = [email, f_email];
     const [rows, fields] = await pool.execute(query, params);
     res.send(rows);
   } catch (err) {
