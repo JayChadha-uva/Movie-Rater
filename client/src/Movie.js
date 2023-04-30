@@ -91,6 +91,21 @@ function Movie() {
         .catch((err) => {
           console.error(err);
         });
+      
+      movie.genres.map((genre, index) => {
+        const genreSubmit = {
+          movieID: id,
+          genreID: genre.id,
+        };
+        // console.log(id + ": " + genre.name + " " + genre.id);
+
+        axios
+          .post("http://localhost:1234/insert/movie/genre", genreSubmit)
+          .then(() => {})
+          .catch((err) => {
+            console.error(err);
+          });
+      });
     }
   }, [movie.title]);
 

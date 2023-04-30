@@ -124,6 +124,21 @@ app.post("/insert/movie", async (req, res) => {
   }
 });
 
+app.post("/insert/movie/genre", async (req, res) => {
+  try {
+    const query =
+      "INSERT INTO has (movie_id, genre_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE movie_id=?";
+    const params = [req.body.movieID, req.body.genreID, req.body.movieID];
+
+    const [rows, fields] = await pool.execute(query, params);
+
+    res.status(200).send("Review created successfully");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error creating review");
+  }
+});
+
 // Define routes
 app.get("/api/movie/:id/:email/:field/:order", async (req, res) => {
   const id = req.params.id;
