@@ -189,6 +189,51 @@ app.get("/api/genres/movies", async (req, res) => {
   }
 });
 
+app.get("/api/track/:email", async (req, res) => {
+  const email = req.params.email;
+  try {
+    const [rows, fields] = await pool.query(
+      "SELECT * FROM Movie NATURAL JOIN tracks WHERE email = ?",
+      [email]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
+app.post("/api/track/update", async (req, res) => {
+  try {
+    const query =
+      "UPDATE tracks SET status=?, track_date=NOW() WHERE email=? AND movie_id=?";
+    const params = [
+      req.body.trackMovie.new_status,
+      req.body.trackMovie.email,
+      req.body.trackMovie.movie_id,
+    ];
+
+    const [rows, fields] = await pool.query(query, params);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
+app.delete("/api/track/delete", async (req, res) => {
+  try {
+    const query = "DELETE FROM tracks WHERE email=? AND movie_id=?";
+    const params = [req.body.email, req.body.movie_id];
+
+    const [rows, fields] = await pool.query(query, params);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
 // all reviews for a user
 app.get("/api/:email", async (req, res) => {
   const email = req.params.email;
