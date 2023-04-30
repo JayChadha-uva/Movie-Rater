@@ -9,6 +9,8 @@ class Track extends Component {
       email: props.email,
       tracks: [],
     };
+    this.currentEmail = sessionStorage.getItem("email");
+    
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
@@ -68,6 +70,7 @@ class Track extends Component {
             <div class="card-body">
               <div className="d-flex justify-content-between">
                 <h5 class="card-title">{track.title}</h5>
+                {this.state.email === this.currentEmail ?
                 <div class="dropdown">
                   <button
                     class="btn btn-secondary dropdown-toggle"
@@ -85,7 +88,8 @@ class Track extends Component {
                       <button class="dropdown-item" onClick={() => this.handleDelete(this.state.email, track.movie_id)}>Untrack</button>
                     </li>
                   </ul>
-                </div>
+                </div> : <button
+                    class="btn btn-secondary">{track.status}</button>}
               </div>
               <h6 class="card-subtitle mb-2 text-body-secondary">
                 Last updated -{" "}

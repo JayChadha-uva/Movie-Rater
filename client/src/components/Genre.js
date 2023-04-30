@@ -10,6 +10,8 @@ class Genre extends Component {
       favorite: props.favorite,
       genres: [],
     };
+    this.currentEmail = sessionStorage.getItem("email");
+
     this.handleFavorite = this.handleFavorite.bind(this);
   }
 
@@ -85,26 +87,30 @@ class Genre extends Component {
                   >
                     View
                   </a>
-                  {this.state.favorite === "false" ? (
-                    <button
-                      type="button"
-                      class="btn btn-outline-success"
-                      onClick={() =>
-                        this.handleFavorite(this.state.email, genre.genre_id)
-                      }
-                    >
-                      Favorite
-                    </button>
+                  {this.state.email === this.currentEmail ? (
+                    this.state.favorite === "false" ? (
+                      <button
+                        type="button"
+                        class="btn btn-outline-success"
+                        onClick={() =>
+                          this.handleFavorite(this.state.email, genre.genre_id)
+                        }
+                      >
+                        Favorite
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger"
+                        onClick={() =>
+                          this.handleDelete(this.state.email, genre.genre_id)
+                        }
+                      >
+                        Delete
+                      </button>
+                    )
                   ) : (
-                    <button
-                      type="button"
-                      class="btn btn-outline-danger"
-                      onClick={() =>
-                        this.handleDelete(this.state.email, genre.genre_id)
-                      }
-                    >
-                      Delete
-                    </button>
+                    <></>
                   )}
                 </div>
               </div>

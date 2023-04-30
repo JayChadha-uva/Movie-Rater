@@ -174,7 +174,12 @@ class Review extends Component {
                 })}
               </h6>
               <h6 class="card-subtitle mb-2 text-body-secondary">
-                {review.email}
+                <a
+                  class="text-reset text-decoration-none"
+                  href={"/profile/" + review.email}
+                >
+                  {review.email}
+                </a>
               </h6>
 
               <p class="card-text">{review.review_text}</p>

@@ -17,6 +17,7 @@ function App() {
       <Navbar></Navbar>
       <Routes>
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:email" element={<Profile />} />
         <Route path="/movie/:id" element={<Movie />} />
         <Route exact path="/" element={<Discover />} />
         <Route path="/login" element={<Login />} />

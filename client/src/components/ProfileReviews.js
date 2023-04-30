@@ -10,6 +10,8 @@ class ProfileReviews extends Component {
       email: props.email,
       reviews: [],
     };
+    this.currentEmail = sessionStorage.getItem("email");
+
     this.handleDelete = this.handleDelete.bind(this);
   }
 
@@ -53,19 +55,23 @@ class ProfileReviews extends Component {
                 <h5 class="card-title">
                   {review.review_title} - {review.movie_id}
                 </h5>
-                <button
-                  type="button"
-                  class="btn btn-danger"
-                  onClick={() =>
-                    this.handleDelete(
-                      this.state.email,
-                      review.review_title,
-                      review.movie_id
-                    )
-                  }
-                >
-                  Delete
-                </button>
+                {this.state.email === this.currentEmail ? (
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    onClick={() =>
+                      this.handleDelete(
+                        this.state.email,
+                        review.review_title,
+                        review.movie_id
+                      )
+                    }
+                  >
+                    Delete
+                  </button>
+                ) : (
+                  <></>
+                )}
               </div>
               <h6 class="card-subtitle mb-2 text-body-secondary">
                 <i class="bi bi-star-fill star-color"></i> {review.rating} -{" "}

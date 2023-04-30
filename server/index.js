@@ -239,13 +239,27 @@ app.get("/api/:email", async (req, res) => {
   const email = req.params.email;
   try {
     const [rows, fields] = await pool.query(
-      "SELECT * FROM Review WHERE email = ? ORDER BY review_date DESC",
+      "SELECT * FROM Review R NATURAL JOIN (SELECT email, first_name, last_name FROM Users WHERE email = ?) U ORDER BY R.review_date DESC",
       [email]
     );
     res.json(rows);
   } catch (err) {
     console.error(err);
     res.status(500).send("Error retrieving users from database");
+  }
+});
+
+// Get email from id
+app.post("/api/user/get", async (req, res) => {
+  try {
+    const email = req.body.email;
+
+    const query = "SELECT first_name, last_name FROM Users WHERE email=?";
+    const params = [email];
+    const [rows, fields] = await pool.execute(query, params);
+    res.send(rows);
+  } catch (err) {
+    res.send({ message: "Error during registration" });
   }
 });
 
