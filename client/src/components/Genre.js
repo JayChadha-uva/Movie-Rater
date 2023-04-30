@@ -76,7 +76,7 @@ class Genre extends Component {
     return (
       <>
         {this.state.genres.length == 0 ? (
-          <>There are no genres favorited.</>
+          <div class="mt-3">There are no genres favorited.</div>
         ) : (
           <div class="mt-3 row">
             {this.state.genres.map((genre, index) => (

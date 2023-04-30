@@ -66,7 +66,7 @@ class Track extends Component {
     return (
       <>
         {this.state.tracks.length == 0 ? (
-          <>There are no movies tracked.</>
+          <div class="mt-3 mb-3">There are no movies tracked.</div>
         ) : (
           this.state.tracks.map((track, index) => (
             <div class="card mb-3 rounded-4 border-0" key={index}>
@@ -85,10 +85,53 @@ class Track extends Component {
                       </button>
                       <ul class="dropdown-menu">
                         <li>
-                          <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Plan to watch")}>Plan to watch</button>
-                          <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Watched")}>Watched</button>
-                          <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Dropped")}>Dropped</button>
-                          <button class="dropdown-item" onClick={() => this.handleDelete(this.state.email, track.movie_id)}>Untrack</button>
+                          <button
+                            class="dropdown-item"
+                            onClick={() =>
+                              this.handleUpdate(
+                                this.state.email,
+                                track.movie_id,
+                                "Plan to watch"
+                              )
+                            }
+                          >
+                            Plan to watch
+                          </button>
+                          <button
+                            class="dropdown-item"
+                            onClick={() =>
+                              this.handleUpdate(
+                                this.state.email,
+                                track.movie_id,
+                                "Watched"
+                              )
+                            }
+                          >
+                            Watched
+                          </button>
+                          <button
+                            class="dropdown-item"
+                            onClick={() =>
+                              this.handleUpdate(
+                                this.state.email,
+                                track.movie_id,
+                                "Dropped"
+                              )
+                            }
+                          >
+                            Dropped
+                          </button>
+                          <button
+                            class="dropdown-item"
+                            onClick={() =>
+                              this.handleDelete(
+                                this.state.email,
+                                track.movie_id
+                              )
+                            }
+                          >
+                            Untrack
+                          </button>
                         </li>
                       </ul>
                     </div>

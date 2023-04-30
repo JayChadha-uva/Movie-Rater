@@ -308,6 +308,21 @@ app.get("/api/:email", async (req, res) => {
   }
 });
 
+// five recent reviews from user's followed
+app.get("/api/:email/follow", async (req, res) => {
+  const email = req.params.email;
+  try {
+    const [rows, fields] = await pool.query(
+      "SELECT * FROM Review R NATURAL JOIN (SELECT email FROM follows WHERE f_email = ?) U ORDER BY R.review_date DESC LIMIT 5",
+      [email]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
 // Get name from email
 app.post("/api/user/get", async (req, res) => {
   try {

@@ -2,7 +2,7 @@ import React from "react";
 import { Component } from "react";
 import axios from "axios";
 
-class ProfileReviews extends Component {
+class FollowFeed extends Component {
   constructor(props) {
     super(props);
 
@@ -10,46 +10,21 @@ class ProfileReviews extends Component {
       email: props.email,
       reviews: [],
     };
-    this.currentEmail = sessionStorage.getItem("email");
-
-    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
-    fetch(`/api/${this.state.email}`).then((res) =>
+    fetch(`/api/${this.state.email}/follow`).then((res) =>
       res.json().then((reviews) => {
         this.setState({ reviews: reviews });
       })
     );
   }
 
-  handleDelete(email, review_title, movieIDInput) {
-    const movieID = parseInt(movieIDInput);
-    // console.log(movieID);
-
-    const deleteReview = {
-      email,
-      review_title,
-      movie_id: movieID,
-    };
-
-    axios
-      .delete("http://localhost:1234/api/review/delete", { data: deleteReview })
-      .then(() => {})
-      .catch((err) => {
-        console.error(err);
-      });
-
-    setTimeout(() => {
-      window.location.reload();
-    }, 100);
-  }
-
   render() {
     return (
       <>
         {this.state.reviews.length == 0 ? (
-          <div class="mt-3">There are no reviews.</div>
+          <>There are no reviews.</>
         ) : (
           this.state.reviews.map((review, index) => (
             <div class="card mb-3 rounded-4 border-0" key={index}>
@@ -88,7 +63,12 @@ class ProfileReviews extends Component {
                   })}
                 </h6>
                 <h6 class="card-subtitle mb-2 text-body-secondary">
-                  {review.email}
+                  <a
+                    class="text-reset text-decoration-none"
+                    href={"/profile/" + review.email}
+                  >
+                    {review.email}
+                  </a>
                 </h6>
 
                 <p class="card-text">{review.review_text}</p>
@@ -101,4 +81,4 @@ class ProfileReviews extends Component {
   }
 }
 
-export default ProfileReviews;
+export default FollowFeed;

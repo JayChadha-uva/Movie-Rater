@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ProfileReviews from "./components/ProfileReviews";
 import Genre from "./components/Genre";
 import Track from "./components/Track";
+import FollowFeed from "./components/FollowFeed";
 
 function Profile() {
   let { email } = useParams();
@@ -93,27 +94,41 @@ function Profile() {
 
   return (
     <div key={profileEmail} className="container-md height-requirement">
-      {profileName ? (
-        <div style={{ display: "flex", columnGap: "1em" }}>
-          <h2 class="mt-4 mb-3 nav-bold">{profileName + "'s"} Reviews</h2>
-          <button
-            class="mt-4 mb-3 btn btn-secondary"
-            type="button"
-            onClick={() => {
-              following === "Unfollow" ? handleUnfollow() : handleFollow();
-            }}
-          >
-            {following}
-          </button>
-        </div>
+      {!profileEmail ? (
+        <div class="mt-4">User not found.</div>
       ) : (
-        <h2 class="mt-4 mb-3 nav-bold">My Reviews</h2>
+        <>
+          {profileName ? (
+            <div style={{ display: "flex", columnGap: "1em" }}>
+              <h2 class="mt-4 mb-3 nav-bold">{profileName + "'s"} Reviews</h2>
+              <button
+                class="mt-4 mb-3 btn btn-secondary"
+                type="button"
+                onClick={() => {
+                  following === "Unfollow" ? handleUnfollow() : handleFollow();
+                }}
+              >
+                {following}
+              </button>
+            </div>
+          ) : (
+            <h2 class="mt-4 mb-3 nav-bold">My Reviews</h2>
+          )}
+          {loggedIn ? <ProfileReviews email={profileEmail} /> : <></>}
+          {loggedIn && email === undefined ? (
+            <>
+              <h2 class="mt-4 mb-3 nav-bold">Recent Reviews From Followed</h2>
+              <FollowFeed email={profileEmail} />
+            </>
+          ) : (
+            <></>
+          )}
+          <h2 class="mt-4 mb-3 nav-bold">Favorite Genres</h2>
+          {loggedIn ? <Genre email={profileEmail} favorite={"true"} /> : <></>}
+          <h2 class="mt-4 mb-3 nav-bold">Tracked Movies</h2>
+          {loggedIn ? <Track email={profileEmail} /> : <></>}
+        </>
       )}
-      {loggedIn ? <ProfileReviews email={profileEmail} /> : <></>}
-      <h2 class="mt-4 mb-3 nav-bold">Favorite Genres</h2>
-      {loggedIn ? <Genre email={profileEmail} favorite={"true"} /> : <></>}
-      <h2 class="mt-4 mb-3 nav-bold">Tracked Movies</h2>
-      {loggedIn ? <Track email={profileEmail} /> : <></>}
     </div>
   );
 }
