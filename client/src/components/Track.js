@@ -10,7 +10,7 @@ class Track extends Component {
       tracks: [],
     };
     this.currentEmail = sessionStorage.getItem("email");
-    
+
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
@@ -65,43 +65,49 @@ class Track extends Component {
   render() {
     return (
       <>
-        {this.state.tracks.map((track, index) => (
-          <div class="card mb-3 rounded-4 border-0" key={index}>
-            <div class="card-body">
-              <div className="d-flex justify-content-between">
-                <h5 class="card-title">{track.title}</h5>
-                {this.state.email === this.currentEmail ?
-                <div class="dropdown">
-                  <button
-                    class="btn btn-secondary dropdown-toggle"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    {track.status}
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Plan to watch")}>Plan to watch</button>
-                      <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Watched")}>Watched</button>
-                      <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Dropped")}>Dropped</button>
-                      <button class="dropdown-item" onClick={() => this.handleDelete(this.state.email, track.movie_id)}>Untrack</button>
-                    </li>
-                  </ul>
-                </div> : <button
-                    class="btn btn-secondary">{track.status}</button>}
+        {this.state.tracks.length == 0 ? (
+          <>There are no movies tracked.</>
+        ) : (
+          this.state.tracks.map((track, index) => (
+            <div class="card mb-3 rounded-4 border-0" key={index}>
+              <div class="card-body">
+                <div className="d-flex justify-content-between">
+                  <h5 class="card-title">{track.title}</h5>
+                  {this.state.email === this.currentEmail ? (
+                    <div class="dropdown">
+                      <button
+                        class="btn btn-secondary dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        {track.status}
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Plan to watch")}>Plan to watch</button>
+                          <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Watched")}>Watched</button>
+                          <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Dropped")}>Dropped</button>
+                          <button class="dropdown-item" onClick={() => this.handleDelete(this.state.email, track.movie_id)}>Untrack</button>
+                        </li>
+                      </ul>
+                    </div>
+                  ) : (
+                    <button class="btn btn-secondary">{track.status}</button>
+                  )}
+                </div>
+                <h6 class="card-subtitle mb-2 text-body-secondary">
+                  Last updated -{" "}
+                  {new Date(track.track_date).toLocaleString("en-US", {
+                    month: "2-digit",
+                    day: "2-digit",
+                    year: "numeric",
+                  })}
+                </h6>
               </div>
-              <h6 class="card-subtitle mb-2 text-body-secondary">
-                Last updated -{" "}
-                {new Date(track.track_date).toLocaleString("en-US", {
-                  month: "2-digit",
-                  day: "2-digit",
-                  year: "numeric",
-                })}
-              </h6>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </>
     );
   }

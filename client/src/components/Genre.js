@@ -74,50 +74,62 @@ class Genre extends Component {
 
   render() {
     return (
-      <div class="mt-3 row">
-        {this.state.genres.map((genre, index) => (
-          <div class="col me-3 mb-3" key={index}>
-            <div class="card" style={{ width: "18rem" }}>
-              <div class="card-body">
-                <h5 class="card-title">{genre.genre_name} Movies</h5>
-                <div class="d-flex justify-content-between">
-                  <a
-                    href={`/genre/${genre.genre_id}/${genre.genre_name}`}
-                    class="btn btn-secondary"
-                  >
-                    View
-                  </a>
-                  {this.state.email === this.currentEmail ? (
-                    this.state.favorite === "false" ? (
-                      <button
-                        type="button"
-                        class="btn btn-outline-success"
-                        onClick={() =>
-                          this.handleFavorite(this.state.email, genre.genre_id)
-                        }
+      <>
+        {this.state.genres.length == 0 ? (
+          <>There are no genres favorited.</>
+        ) : (
+          <div class="mt-3 row">
+            {this.state.genres.map((genre, index) => (
+              <div class="col me-3 mb-3" key={index}>
+                <div class="card" style={{ width: "18rem" }}>
+                  <div class="card-body">
+                    <h5 class="card-title">{genre.genre_name} Movies</h5>
+                    <div class="d-flex justify-content-between">
+                      <a
+                        href={`/genre/${genre.genre_id}/${genre.genre_name}`}
+                        class="btn btn-secondary"
                       >
-                        Favorite
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        class="btn btn-outline-danger"
-                        onClick={() =>
-                          this.handleDelete(this.state.email, genre.genre_id)
-                        }
-                      >
-                        Delete
-                      </button>
-                    )
-                  ) : (
-                    <></>
-                  )}
+                        View
+                      </a>
+                      {this.state.email === this.currentEmail ? (
+                        this.state.favorite === "false" ? (
+                          <button
+                            type="button"
+                            class="btn btn-outline-success"
+                            onClick={() =>
+                              this.handleFavorite(
+                                this.state.email,
+                                genre.genre_id
+                              )
+                            }
+                          >
+                            Favorite
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            class="btn btn-outline-danger"
+                            onClick={() =>
+                              this.handleDelete(
+                                this.state.email,
+                                genre.genre_id
+                              )
+                            }
+                          >
+                            Delete
+                          </button>
+                        )
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+        )}
+      </>
     );
   }
 }
