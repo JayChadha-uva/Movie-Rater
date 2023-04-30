@@ -1,6 +1,6 @@
 import React from "react";
 import { Component } from "react";
-import axios from "axios";
+// import axios from "axios";
 
 class FollowFeed extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class FollowFeed extends Component {
   render() {
     return (
       <>
-        {this.state.reviews.length == 0 ? (
+        {this.state.reviews.length === 0 ? (
           <>There are no reviews.</>
         ) : (
           this.state.reviews.map((review, index) => (

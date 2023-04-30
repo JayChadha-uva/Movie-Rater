@@ -65,7 +65,7 @@ class Track extends Component {
   render() {
     return (
       <>
-        {this.state.tracks.length == 0 ? (
+        {this.state.tracks.length === 0 ? (
           <div class="mt-3 mb-3">There are no movies tracked.</div>
         ) : (
           this.state.tracks.map((track, index) => (

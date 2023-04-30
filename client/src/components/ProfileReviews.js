@@ -48,7 +48,7 @@ class ProfileReviews extends Component {
   render() {
     return (
       <>
-        {this.state.reviews.length == 0 ? (
+        {this.state.reviews.length === 0 ? (
           <div class="mt-3">There are no reviews.</div>
         ) : (
           this.state.reviews.map((review, index) => (

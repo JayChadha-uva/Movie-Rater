@@ -75,7 +75,7 @@ class Genre extends Component {
   render() {
     return (
       <>
-        {this.state.genres.length == 0 ? (
+        {this.state.genres.length === 0 ? (
           <div class="mt-3">There are no genres favorited.</div>
         ) : (
           <div class="mt-3 row">
