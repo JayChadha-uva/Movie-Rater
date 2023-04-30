@@ -16,6 +16,8 @@ function Movie() {
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [watchProviders, setWatchProviders] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [trackStatus, setTrackStatus] = useState("Track");
+  const [toggleTrackFetch, setToggleTrackFetch] = useState(false);
 
   const currentEmail = sessionStorage.getItem("email");
 
@@ -92,6 +94,56 @@ function Movie() {
     }
   }, [movie.title]);
 
+  // Loads the user's tracking status of the displayed movie and change locally
+  useEffect(() => {
+    if (loggedIn) {
+      fetch(`/api/track/${currentEmail}/${id}`).then((res) =>
+        res.json().then((tracksData) => {
+          if (tracksData && tracksData.length > 0) {
+            setTrackStatus(tracksData[0].status);
+          }
+        })
+      );
+    }
+  }, [toggleTrackFetch, loggedIn]);
+
+  const handleTrackUpdate = (new_status) => {
+    const trackMovie = {
+      email: currentEmail,
+      movie_id: parseInt(id),
+      new_status,
+    };
+
+    axios
+      .post("http://localhost:1234/api/track/update", { trackMovie })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+
+    setTrackStatus(new_status);
+    setToggleTrackFetch(!toggleTrackFetch);
+  };
+
+  const handleTrackDelete = () => {
+    const deleteTrack = {
+      email: currentEmail,
+      movie_id: parseInt(id),
+    };
+
+    axios
+      .delete("http://localhost:1234/api/track/delete", {
+        data: deleteTrack,
+      })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+
+    setTrackStatus("Track");
+    setToggleTrackFetch(!toggleTrackFetch);
+  };
+
   return (
     <>
       <div class="container container-md mb-5 height-requirement">
@@ -138,6 +190,25 @@ function Movie() {
                       )}
                     </>
                   ))}
+              </div>
+
+              <div class="dropdown">
+                <button
+                  class="btn btn-secondary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {trackStatus}
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <button class="dropdown-item" onClick={() => handleTrackUpdate("Plan to watch")}>Plan to watch</button>
+                    <button class="dropdown-item" onClick={() => handleTrackUpdate("Watched")}>Watched</button>
+                    <button class="dropdown-item" onClick={() => handleTrackUpdate("Dropped")}>Dropped</button>
+                    <button class="dropdown-item" onClick={() => handleTrackDelete()}>Untrack</button>
+                  </li>
+                </ul>
               </div>
 
               {watchProviders &&

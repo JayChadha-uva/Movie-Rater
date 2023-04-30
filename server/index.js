@@ -203,14 +203,30 @@ app.get("/api/track/:email", async (req, res) => {
   }
 });
 
+app.get("/api/track/:email/:movie_id", async (req, res) => {
+  const email = req.params.email;
+  const movie_id = req.params.movie_id;
+  try {
+    const [rows, fields] = await pool.query(
+      "SELECT * FROM Movie NATURAL JOIN tracks WHERE email = ? AND movie_id = ?",
+      [email, movie_id]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
 app.post("/api/track/update", async (req, res) => {
   try {
     const query =
-      "UPDATE tracks SET status=?, track_date=NOW() WHERE email=? AND movie_id=?";
+      "INSERT INTO tracks (email, movie_id, track_date, status) VALUES (?, ?, NOW(), ?) ON DUPLICATE KEY UPDATE status=?";
     const params = [
-      req.body.trackMovie.new_status,
       req.body.trackMovie.email,
       req.body.trackMovie.movie_id,
+      req.body.trackMovie.new_status,
+      req.body.trackMovie.new_status,
     ];
 
     const [rows, fields] = await pool.query(query, params);
