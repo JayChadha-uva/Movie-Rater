@@ -280,7 +280,7 @@ app.get("/api/:email", async (req, res) => {
   }
 });
 
-// Get email from id
+// Get name from email
 app.post("/api/user/get", async (req, res) => {
   try {
     const email = req.body.email;

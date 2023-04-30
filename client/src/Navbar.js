@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import SelectSearch from "react-select-search";
-// import axios from "axios";
+import axios from "axios";
 
 import "./App.css";
 import "./selectSearch.css";
@@ -12,6 +12,7 @@ function Navbar() {
   const API_KEY = process.env.REACT_APP_TMDB_API;
   const [idVal, setIdVal] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +39,20 @@ function Navbar() {
       navigate(`/movie/${idVal}`);
     }
   }, [idVal]);
+
+  useEffect(() => {
+    axios
+      .post("http://localhost:1234/api/user/get", {
+        email: currentEmail,
+      })
+      .then((response) => {
+        if (response.data.length > 0) {
+          setUsername(
+            response.data[0].first_name + " " + response.data[0].last_name
+          );
+        }
+      });
+  }, [loggedIn]);
 
   return (
     <>
@@ -77,6 +92,13 @@ function Navbar() {
               placeholder="Search Movies"
             />
           </div>
+          {loggedIn ? (
+            <span style={{ color: "white", fontWeight: "bold" }}>
+              Hello, {username}
+            </span>
+          ) : (
+            <></>
+          )}
           {loggedIn ? (
             <a
               class="nav-link"
