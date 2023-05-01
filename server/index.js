@@ -72,6 +72,20 @@ app.post("/api/genre/favorite", async (req, res) => {
   }
 });
 
+app.get("/api/genre/user/prefers/:id", async (req, res) => {
+  const genre_id = req.params.id;
+  try {
+    const [rows, fields] = await pool.query(
+      "SELECT * FROM Movie NATURAL JOIN has WHERE ? IN (SELECT ? FROM prefers)",
+      [genre_id]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
 //Delete a genre by a user
 app.delete("/api/genre/favorite/delete", async (req, res) => {
   try {
