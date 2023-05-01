@@ -31,17 +31,29 @@ class FollowFeed extends Component {
               <div class="card-body">
                 <div class="row ">
                   <div class="col-1">
-                    <img
-                      src={"https://image.tmdb.org/t/p/w500" + review.image_url}
-                      class="card-img rounded-0 "
-                      alt="..."
-                    />
+                    <a
+                      class="text-reset text-decoration-none"
+                      href={"/movie/" + review.movie_id}
+                    >
+                      <img
+                        src={
+                          "https://image.tmdb.org/t/p/w500" + review.image_url
+                        }
+                        class="card-img rounded-0 "
+                        alt="..."
+                      />
+                    </a>
                   </div>
                   <div className="d-flex justify-content-between col">
                     <div>
                       <h5 class="card-title"></h5>
                       <h5 class="card-title">
-                        {review.review_title} - {review.title}
+                        <a
+                          class="text-reset text-decoration-none"
+                          href={"/movie/" + review.movie_id}
+                        >
+                          {review.review_title} - {review.title}
+                        </a>
                       </h5>
                       <h6 class="card-subtitle mb-2 text-body-secondary">
                         <i class="bi bi-star-fill star-color"></i>{" "}
@@ -56,7 +68,12 @@ class FollowFeed extends Component {
                         })}
                       </h6>
                       <h6 class="card-subtitle mb-2 text-body-secondary">
-                        {review.email}
+                        <a
+                          class="text-reset text-decoration-none"
+                          href={"/profile/" + review.email}
+                        >
+                          {review.email}
+                        </a>
                       </h6>
                       <p class="card-text">{review.review_text}</p>
                     </div>

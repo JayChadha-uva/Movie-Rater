@@ -133,15 +133,29 @@ class Track extends Component {
               <div class="card-body">
                 <div class="row ">
                   <div class="col-1">
-                    <img
-                      src={"https://image.tmdb.org/t/p/w500" + track.image_url}
-                      class="card-img rounded-0 "
-                      alt="..."
-                    />
+                    <a
+                      class="text-reset text-decoration-none"
+                      href={"/movie/" + track.movie_id}
+                    >
+                      <img
+                        src={
+                          "https://image.tmdb.org/t/p/w500" + track.image_url
+                        }
+                        class="card-img rounded-0"
+                        alt="..."
+                      />
+                    </a>
                   </div>
                   <div className="d-flex justify-content-between col">
                     <div>
-                      <h5 class="card-title">{track.title}</h5>
+                      <h5 class="card-title">
+                        <a
+                          class="text-reset text-decoration-none"
+                          href={"/movie/" + track.movie_id}
+                        >
+                          {track.title}
+                        </a>
+                      </h5>
                       <h6 class="card-subtitle mb-2 text-body-secondary">
                         Last updated -{" "}
                         {new Date(track.track_date).toLocaleString("en-US", {
