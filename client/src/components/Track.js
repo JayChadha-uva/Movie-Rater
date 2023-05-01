@@ -135,7 +135,7 @@ class Track extends Component {
                   <div class="col-1">
                     <img
                       src={"https://image.tmdb.org/t/p/w500" + track.image_url}
-                      class="card-img rounded-0 rounded-start-4 "
+                      class="card-img rounded-0 "
                       alt="..."
                     />
                   </div>
@@ -163,10 +163,53 @@ class Track extends Component {
                         </button>
                         <ul class="dropdown-menu">
                           <li>
-                            <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Plan to watch")}>Plan to watch</button>
-                            <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Watched")}>Watched</button>
-                            <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Dropped")}>Dropped</button>
-                            <button class="dropdown-item" onClick={() => this.handleDelete(this.state.email, track.movie_id)}>Untrack</button>
+                            <button
+                              class="dropdown-item"
+                              onClick={() =>
+                                this.handleUpdate(
+                                  this.state.email,
+                                  track.movie_id,
+                                  "Plan to watch"
+                                )
+                              }
+                            >
+                              Plan to watch
+                            </button>
+                            <button
+                              class="dropdown-item"
+                              onClick={() =>
+                                this.handleUpdate(
+                                  this.state.email,
+                                  track.movie_id,
+                                  "Watched"
+                                )
+                              }
+                            >
+                              Watched
+                            </button>
+                            <button
+                              class="dropdown-item"
+                              onClick={() =>
+                                this.handleUpdate(
+                                  this.state.email,
+                                  track.movie_id,
+                                  "Dropped"
+                                )
+                              }
+                            >
+                              Dropped
+                            </button>
+                            <button
+                              class="dropdown-item"
+                              onClick={() =>
+                                this.handleDelete(
+                                  this.state.email,
+                                  track.movie_id
+                                )
+                              }
+                            >
+                              Untrack
+                            </button>
                           </li>
                         </ul>
                       </div>

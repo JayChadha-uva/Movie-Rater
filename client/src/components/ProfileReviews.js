@@ -95,7 +95,7 @@ class ProfileReviews extends Component {
                   <div class="col-1">
                     <img
                       src={"https://image.tmdb.org/t/p/w500" + review.image_url}
-                      class="card-img rounded-0 rounded-start-4 "
+                      class="card-img rounded-0 "
                       alt="..."
                     />
                   </div>
