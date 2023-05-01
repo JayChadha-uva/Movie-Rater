@@ -54,44 +54,56 @@ class ProfileReviews extends Component {
           this.state.reviews.map((review, index) => (
             <div class="card mb-3 rounded-4 border-0" key={index}>
               <div class="card-body">
-                <div className="d-flex justify-content-between">
-                  <h5 class="card-title">
-                    {review.review_title} - {review.movie_id}
-                  </h5>
-                  {this.state.email === this.currentEmail ? (
-                    <button
-                      type="button"
-                      class="btn btn-danger"
-                      onClick={() =>
-                        this.handleDelete(
-                          this.state.email,
-                          review.review_title,
-                          review.movie_id
-                        )
-                      }
-                    >
-                      Delete
-                    </button>
-                  ) : (
-                    <></>
-                  )}
+                <div class="row ">
+                  <div class="col-1">
+                    <img
+                      src={"https://image.tmdb.org/t/p/w500" + review.image_url}
+                      class="card-img rounded-0 rounded-start-4 "
+                      alt="..."
+                    />
+                  </div>
+                  <div className="d-flex justify-content-between col">
+                    <div>
+                      <h5 class="card-title"></h5>
+                      <h5 class="card-title">
+                        {review.review_title} - {review.title}
+                      </h5>
+                      <h6 class="card-subtitle mb-2 text-body-secondary">
+                        <i class="bi bi-star-fill star-color"></i>{" "}
+                        {review.rating} -{" "}
+                        {new Date(review.review_date).toLocaleString("en-US", {
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: true,
+                          month: "2-digit",
+                          day: "2-digit",
+                          year: "numeric",
+                        })}
+                      </h6>
+                      <h6 class="card-subtitle mb-2 text-body-secondary">
+                        {review.email}
+                      </h6>
+                      <p class="card-text">{review.review_text}</p>
+                    </div>
+                    {this.state.email === this.currentEmail ? (
+                      <button
+                        type="button"
+                        class="btn btn-danger"
+                        onClick={() =>
+                          this.handleDelete(
+                            this.state.email,
+                            review.review_title,
+                            review.movie_id
+                          )
+                        }
+                      >
+                        Delete
+                      </button>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                 </div>
-                <h6 class="card-subtitle mb-2 text-body-secondary">
-                  <i class="bi bi-star-fill star-color"></i> {review.rating} -{" "}
-                  {new Date(review.review_date).toLocaleString("en-US", {
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: true,
-                    month: "2-digit",
-                    day: "2-digit",
-                    year: "numeric",
-                  })}
-                </h6>
-                <h6 class="card-subtitle mb-2 text-body-secondary">
-                  {review.email}
-                </h6>
-
-                <p class="card-text">{review.review_text}</p>
               </div>
             </div>
           ))

@@ -34,7 +34,10 @@ class Track extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.toggle !== prevState.toggle || JSON.stringify(this.state.filters) !== JSON.stringify(prevState.filters)) {
+    if (
+      this.state.toggle !== prevState.toggle ||
+      JSON.stringify(this.state.filters) !== JSON.stringify(prevState.filters)
+    ) {
       if (this.state.filters.length === 0) {
         fetch(`/api/track/${this.state.email}`).then((res) =>
           res.json().then((tracksData) => {
@@ -43,14 +46,17 @@ class Track extends Component {
         );
       } else {
         let filterStr = "(";
-        this.state.filters.map((filter) => {filterStr += "" + filter.value + ", "});
+        this.state.filters.map((filter) => {
+          filterStr += "" + filter.value + ", ";
+        });
         filterStr = filterStr.substring(0, filterStr.length - 2) + ")";
         console.log(filterStr);
 
-        fetch(`/api/track/${this.state.email}/filter/${filterStr}`).then((res) =>
-          res.json().then((tracksData) => {
-            this.setState({ tracks: tracksData });
-          })
+        fetch(`/api/track/${this.state.email}/filter/${filterStr}`).then(
+          (res) =>
+            res.json().then((tracksData) => {
+              this.setState({ tracks: tracksData });
+            })
         );
       }
     }
@@ -93,7 +99,9 @@ class Track extends Component {
     if (e.target.checked) {
       this.setState({ filters: [...this.state.filters, { value }] });
     } else {
-      this.setState({ filters: this.state.filters.filter((genre) => genre.value !== value) });
+      this.setState({
+        filters: this.state.filters.filter((genre) => genre.value !== value),
+      });
     }
   }
 
@@ -102,49 +110,71 @@ class Track extends Component {
       <>
         {this.state.genres.map((genre, index) => (
           <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id={"genre"+index} onChange={(e) => this.handleFilter(e, genre.genre_id)}/>
-          <label class="form-check-label" for={"genre"+index}>{genre.genre_name}</label>
-        </div>
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id={"genre" + index}
+              onChange={(e) => this.handleFilter(e, genre.genre_id)}
+            />
+            <label class="form-check-label" for={"genre" + index}>
+              {genre.genre_name}
+            </label>
+          </div>
         ))}
         {this.state.tracks.length === 0 ? (
           <div class="mt-3 mb-3">There are no movies tracked.</div>
         ) : (
           this.state.tracks.map((track, index) => (
-            <div class="card mt-3 mb-3 rounded-4 border-0" key={index}>
+            <div
+              class="card mt-3 mb-3 rounded-4 border-0"
+              key={index}
+              style={{ display: "flex" }}
+            >
               <div class="card-body">
-                <div className="d-flex justify-content-between">
-                  <h5 class="card-title">{track.title}</h5>
-                  {this.state.email === this.currentEmail ? (
-                    <div class="dropdown">
-                      <button
-                        class="btn btn-secondary dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {track.status}
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Plan to watch")}>Plan to watch</button>
-                          <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Watched")}>Watched</button>
-                          <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Dropped")}>Dropped</button>
-                          <button class="dropdown-item" onClick={() => this.handleDelete(this.state.email, track.movie_id)}>Untrack</button>
-                        </li>
-                      </ul>
+                <div class="row ">
+                  <div class="col-1">
+                    <img
+                      src={"https://image.tmdb.org/t/p/w500" + track.image_url}
+                      class="card-img rounded-0 rounded-start-4 "
+                      alt="..."
+                    />
+                  </div>
+                  <div className="d-flex justify-content-between col">
+                    <div>
+                      <h5 class="card-title">{track.title}</h5>
+                      <h6 class="card-subtitle mb-2 text-body-secondary">
+                        Last updated -{" "}
+                        {new Date(track.track_date).toLocaleString("en-US", {
+                          month: "2-digit",
+                          day: "2-digit",
+                          year: "numeric",
+                        })}
+                      </h6>
                     </div>
-                  ) : (
-                    <button class="btn btn-secondary">{track.status}</button>
-                  )}
+                    {this.state.email === this.currentEmail ? (
+                      <div class="dropdown">
+                        <button
+                          class="btn btn-secondary dropdown-toggle"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          {track.status}
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li>
+                            <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Plan to watch")}>Plan to watch</button>
+                            <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Watched")}>Watched</button>
+                            <button class="dropdown-item" onClick={() => this.handleUpdate(this.state.email, track.movie_id, "Dropped")}>Dropped</button>
+                            <button class="dropdown-item" onClick={() => this.handleDelete(this.state.email, track.movie_id)}>Untrack</button>
+                          </li>
+                        </ul>
+                      </div>
+                    ) : (
+                      <button class="btn btn-secondary">{track.status}</button>
+                    )}
+                  </div>
                 </div>
-                <h6 class="card-subtitle mb-2 text-body-secondary">
-                  Last updated -{" "}
-                  {new Date(track.track_date).toLocaleString("en-US", {
-                    month: "2-digit",
-                    day: "2-digit",
-                    year: "numeric",
-                  })}
-                </h6>
               </div>
             </div>
           ))
