@@ -101,7 +101,6 @@ class ProfileReviews extends Component {
                   </div>
                   <div className="d-flex justify-content-between col">
                     <div>
-                      <h5 class="card-title"></h5>
                       <h5 class="card-title">
                         {review.review_title} - {review.title}
                       </h5>
@@ -121,6 +120,27 @@ class ProfileReviews extends Component {
                         {review.email}
                       </h6>
                       <p class="card-text">{review.review_text}</p>
+                      {this.state.showInput === true &&
+                      review.review_date === this.state.editReviewDate ? (
+                        <div>
+                          <form action="">
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="Update Review Title"
+                              onChange={(e) => this.handleTitle(e.target.value)}
+                            />
+                            <button
+                              class="mt-3 mb-1 btn btn-success"
+                              onClick={() => this.handleEdit(review.review_id)}
+                            >
+                              Update
+                            </button>
+                          </form>
+                        </div>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                     {this.state.email === this.currentEmail ? (
                       <div class="">
