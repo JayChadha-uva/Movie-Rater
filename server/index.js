@@ -57,6 +57,24 @@ app.post("/create", async (req, res) => {
   }
 });
 
+// update title
+app.post("/api/review/update/:review_id", async (req, res) => {
+  const reviewID = req.params.review_id;
+  try {
+    const query =
+      "UPDATE Review SET review_title = ?, review_date = ?  WHERE review_id = ?";
+    const params = [req.body.review_title, req.body.review_date, reviewID];
+
+    console.log(params);
+    const [rows, fields] = await pool.execute(query, params);
+
+    res.status(200).send("Review created successfully");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error creating review");
+  }
+});
+
 // favorite a genre for a user
 app.post("/api/genre/favorite", async (req, res) => {
   try {
@@ -225,6 +243,22 @@ app.get("/api/track/:email", async (req, res) => {
     const [rows, fields] = await pool.query(
       "SELECT * FROM Movie NATURAL JOIN tracks WHERE email = ?",
       [email]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
+// get review with movieID
+app.get("/api/movie/:movieID/:email", async (req, res) => {
+  const email = req.params.email;
+  const movie_id = req.params.movieID;
+  try {
+    const [rows, fields] = await pool.query(
+      "SELECT * FROM Review WHERE email = ? AND movie_id = ?",
+      [email, movie_id]
     );
     res.json(rows);
   } catch (err) {

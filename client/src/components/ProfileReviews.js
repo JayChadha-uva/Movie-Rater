@@ -9,10 +9,15 @@ class ProfileReviews extends Component {
     this.state = {
       email: props.email,
       reviews: [],
+      showInput: false,
+      editReviewDate: "",
+      editTitle: "",
     };
     this.currentEmail = sessionStorage.getItem("email");
 
     this.handleDelete = this.handleDelete.bind(this);
+    // this.handleSetState = this.handleSetState.bind(this);
+    // this.handleTitle = this.handleTitle.bind(this);
   }
 
   componentDidMount() {
@@ -21,6 +26,14 @@ class ProfileReviews extends Component {
         this.setState({ reviews: reviews });
       })
     );
+  }
+
+  handleSetState(review_date) {
+    this.setState({ showInput: true, editReviewDate: review_date });
+  }
+
+  handleTitle(title) {
+    this.setState({ editTitle: title });
   }
 
   handleDelete(email, review_title, movieIDInput) {
@@ -35,6 +48,30 @@ class ProfileReviews extends Component {
 
     axios
       .delete("http://localhost:1234/api/review/delete", { data: deleteReview })
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  }
+
+  handleEdit(review_id) {
+    const sixHoursAgo = new Date();
+    sixHoursAgo.setHours(sixHoursAgo.getHours() - 4);
+
+    const updatedReview = {
+      review_title: this.state.editTitle,
+      review_date: sixHoursAgo.toISOString().slice(0, 19).replace("T", " "),
+    };
+
+    axios
+      .post(
+        `http://localhost:1234/api/review/update/${review_id}`,
+        updatedReview
+      )
       .then(() => {})
       .catch((err) => {
         console.error(err);
@@ -86,19 +123,30 @@ class ProfileReviews extends Component {
                       <p class="card-text">{review.review_text}</p>
                     </div>
                     {this.state.email === this.currentEmail ? (
-                      <button
-                        type="button"
-                        class="btn btn-danger"
-                        onClick={() =>
-                          this.handleDelete(
-                            this.state.email,
-                            review.review_title,
-                            review.movie_id
-                          )
-                        }
-                      >
-                        Delete
-                      </button>
+                      <div class="">
+                        <button
+                          type="button"
+                          class="btn btn-secondary me-4"
+                          onClick={() =>
+                            this.handleSetState(review.review_date)
+                          }
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-danger"
+                          onClick={() =>
+                            this.handleDelete(
+                              this.state.email,
+                              review.review_title,
+                              review.movie_id
+                            )
+                          }
+                        >
+                          Delete
+                        </button>
+                      </div>
                     ) : (
                       <></>
                     )}
