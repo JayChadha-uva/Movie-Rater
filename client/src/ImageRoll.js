@@ -9,7 +9,7 @@ function ImageRoll({ movieInput }) {
   const img_URL = "https://image.tmdb.org/t/p/w500";
   return (
     <>
-      <Link to={`/movie/${movieInput.id}`}>
+      <a href={`/movie/${movieInput.id}`}>
         <img
           src={defaultImg}
           alt=""
@@ -23,7 +23,7 @@ function ImageRoll({ movieInput }) {
           onLoad={() => setLoading(true)}
           style={loading ? {} : { display: "none" }}
         />
-      </Link>
+      </a>
     </>
   );
 }

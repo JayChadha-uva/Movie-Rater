@@ -147,6 +147,7 @@ app.get("/api/movie/:id/:email/:field/:order", async (req, res) => {
   const order = req.params.order;
   try {
     const params = [email, id, field, order];
+    console.log(params);
 
     const [rows, fields] = await pool.query(
       "SELECT * FROM (SELECT * FROM rates WHERE email = ?) AS user_rating RIGHT JOIN (SELECT * FROM Review WHERE movie_id = ?) AS R ON R.review_id = user_rating.review_id ORDER BY R." +
@@ -225,6 +226,26 @@ app.get("/api/track/:email/:movie_id", async (req, res) => {
     const [rows, fields] = await pool.query(
       "SELECT * FROM Movie NATURAL JOIN tracks WHERE email = ? AND movie_id = ?",
       [email, movie_id]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error retrieving users from database");
+  }
+});
+
+app.get("/api/track/:email/filter/:filters", async (req, res) => {
+  const email = req.params.email;
+  const filters = req.params.filters;
+  const numFilters = [...filters].filter((c) => c === ",").length + 1;
+  try {
+    const [rows, fields] = await pool.query(
+      "SELECT * FROM Movie NATURAL JOIN tracks NATURAL JOIN (SELECT movie_id FROM has WHERE genre_id IN " +
+        filters +
+        " GROUP BY movie_id HAVING COUNT(*)=" +
+        numFilters +
+        ") R WHERE email = ?",
+      [email]
     );
     res.json(rows);
   } catch (err) {
