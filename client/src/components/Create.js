@@ -32,7 +32,7 @@ class Create extends Component {
     const { movieID, email, rating, reviewTitle, reviewText } = this.state;
 
     const sixHoursAgo = new Date();
-    sixHoursAgo.setHours(sixHoursAgo.getHours() - 6);
+    sixHoursAgo.setHours(sixHoursAgo.getHours() - 4);
 
     const book = {
       movieID,
