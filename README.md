@@ -1,7 +1,10 @@
 # Movie Rater Application
+Pulling from the TMDB api. Backend branch contains ExpressJS code for interacting with the database
 
-Pulling from the TMDB application
+### Frontend Deployed
+Deployed [here](https://movie-rater-project.netlify.app)
 
+### Getting Started
 Clone repo, go to directory of my-app and run "npm start"
 
-Deployed [here](https://movie-rater-project.netlify.app)
+
